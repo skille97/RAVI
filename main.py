@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.errorhandler(404)
 def page_not_found(e):
-        return render_template('404.html'), 404
+    return render_template('404.html'), 404
 
 
 
@@ -30,7 +30,7 @@ def moveRow():
     to=request.form['to']
     return 1
 
-    
+
 @app.route('/addRow/', methods=['POST'])
 def addRow():
     axis=request.form['axis']
