@@ -2,6 +2,7 @@
 	<head>
 		<title>RAVI</title>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'index.css') }}">
+		<script src="{{ url_for('static', filename = 'index.js') }}"></script>
 	</head>
 	<body>
 		<center>
@@ -15,7 +16,7 @@
 				<tr>
 					{% for rowrow in row %}
 					{# Rowrow, row your boat. #}
-					<td>{{ rowrow }}</td>
+					<td class="data">{{ rowrow }}</td>
 					{% endfor %}
 				</tr>
 				{% endfor %}
