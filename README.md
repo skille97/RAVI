@@ -1,5 +1,8 @@
 # RAVI
 
+A simple program for managing parts and tasks in a company.
+
+
 ##Todo
 1. Lave en tabel
 2. Skrive i kollener
@@ -16,16 +19,12 @@ sudo apt install python3-pip
 
 sudo pip3 install flask
 
-sudo pip3 install flask-socketio
-
 ###Arch
 sudo pacman -S python3
 
 sudo pacman -S python3-pip
 
 sudo pip3 install flask
-
-sudo pip3 install flask-socketio
 
 
 ##Run
