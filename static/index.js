@@ -1,3 +1,6 @@
 $(document).ready(function(){
-    $(".data").css("color","blue");
+    $(".data").click(function(){
+      var response = prompt("Enter value for cell:","Value")
+      $(this).html(response);
+    });
 });
