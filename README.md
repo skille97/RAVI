@@ -5,13 +5,13 @@ A simple program for managing parts and tasks in a company.
 
 ##Todo
 1. Lave en tabel
-2. Skrive i kollener
+2. Skrive i kolloner
 3. General kollone
 4. Real time updating
 5. Flytte på kolloner
 
 
-##Install devel stuff
+##Install dev stuff
 ###Ubuntu
 sudo apt install python3
 
@@ -28,4 +28,4 @@ sudo pip3 install flask
 
 
 ##Run
-Hehe just do "python3 main.py" 
+Do "python3 main.py"
