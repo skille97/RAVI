@@ -5,7 +5,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    return render_template('index.html')
+    headers = ["Header1", "Header2", "Header3"]
+    body = [["Body", "Body", "Body"], ["Body", "Body", "Body"]]
+    return render_template('index.html', headers=headers, body=body)
 
 @app.route('/changeCell/', methods=['POST'])
 def changeCell():

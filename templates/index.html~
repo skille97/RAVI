@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<title>RAVI</title>
+	</head>
+	<body>
+		<center>
+			<table border="1" cellpadding="5" cellspacing="5">
+				<tr>
+																																				{% for row in headers %}
+																											<th>{{ row }}</th>
+																							{% endfor %}
+																			</tr>
+																			{% for row in body %}
+																							<tr>
+																											{% for rowrow in row %}
+																											{# Row row, row your boat. #}
+																															<td>{{ rowrow }}</td>
+																											{% endfor %}
+																							</tr>
+																{% endfor %}
+			</table>
+		</center>
+	<body>
+
+</html>
