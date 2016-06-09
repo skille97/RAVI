@@ -8,6 +8,7 @@ $(document).ready(function(){
       if(key.key === "Enter"){
         if(document.getElementsByTagName("input").length > 0){
           console.log(document.getElementsByTagName("input"));
+
         }
       }
     });
