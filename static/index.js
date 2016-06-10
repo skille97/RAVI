@@ -14,3 +14,9 @@ $(document).ready(function(){
     });
 
 });
+
+
+window.setInterval(function(){
+    $("#table").load(document.URL + ' #table');
+    console.log("Reloading table");
+}, 5000);
