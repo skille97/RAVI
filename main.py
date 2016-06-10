@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 from flask import *
-import time
 app = Flask(__name__)
 
-log = open('log', 'a')
-
-log.write("(" + time.strftime("%c") + ")[Server]Starting server\n")
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -23,7 +19,6 @@ def main():
 def changeCell():
     cell=request.form['cell']
     data=request.form['data']
-    log.write("(" + time.strftime("%c") + ")[Client]Ip: " + request.remote_addr + " changed " + cell + " to " + data + "\n")
     return 1
 
 
@@ -32,7 +27,6 @@ def moveRow():
     axis=request.form['axis']
     start=request.form['from']
     to=request.form['to']
-    log.write("(" + time.strftime("%c") + ")[Client]Ip: " + request.remote_addr + " moved row " + start + " to " + to + " at axis " + axis + "\n")
     return 1
 
 
@@ -40,7 +34,6 @@ def moveRow():
 def addRow():
     axis=request.form['axis']
     number=request.form['number']
-    log.write("(" + time.strftime("%c") + ")[Client]Ip: " + request.remote_addr + " added row" + number + " at axis " + axis + "\n")
     return 1
 
 
