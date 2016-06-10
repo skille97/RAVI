@@ -17,31 +17,32 @@ def main():
 
 @app.route('/changeCell/', methods=['POST'])
 def changeCell():
-    cell=request.form['cell']
-    data=request.form['data']
-    return 1
+    cell=request.json['cell']
+    data=request.json['data']
+    print(cell + "     " + data)
+    return "true"
 
 
 @app.route('/moveRow/', methods=['POST'])
 def moveRow():
-    axis=request.form['axis']
-    start=request.form['from']
-    to=request.form['to']
-    return 1
+    #Axis bliver givet i x og y
+    axis=request.json['axis']
+    row=request.json['row']
+    #Direc vil være -1 hvis det er ned eller til venstre. og direc vil være 1 hvis det er up eller højre
+    direc=request.json['direc']
+    print(axis + "     " + str(row) + "     " + direc)
+    return "true"
 
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
-    axis=request.form['axis']
-    number=request.form['number']
-    return 1
+    #Axis bliver givet i x og y, og ja jeg tjækker før det bliver sendt
+    axis=request.json['axis']
+    name=request.json['name']
+    print(axis + "     " + name)
+    return "true"
 
 
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
-
-
-
-
-
