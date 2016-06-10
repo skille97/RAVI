@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $(".data").click(function(){
-      $(this).replaceWith("<input type='text'></input>");
+      $(this).replaceWith("<input class='input' type='text'></input>");
 
     });
 
