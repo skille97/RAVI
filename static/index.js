@@ -20,4 +20,8 @@ $(document).ready(function(){
   $(window).click(function(){
     console.log("Dank")
   });
+
+  $("#add").click(function(){
+    //Function runs when add cell button is pressed
+  });
 });

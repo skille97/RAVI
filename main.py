@@ -78,4 +78,5 @@ def addRow():
 
 if __name__ == "__main__":
     dbInit()
+    addEntry("TestName", "TestComment", "TestComponent", "TestPCB")
     app.run(debug=True, host="0.0.0.0")
