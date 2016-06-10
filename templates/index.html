@@ -1,32 +1,10 @@
 <html>
 	<head>
 		<title>RAVI</title>
+		<link rel="icon" href="http://ravi.dk/onewebstatic/368cade015-Ravi-Electronics_logo_blaa.png"/>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'index.css') }}">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 		<script src="{{ url_for('static', filename = 'index.js') }}"></script>
-
-		<!-- Move me to a seperate script -->
-		<style>
-			.button {
-				display: block;
-				font-family: arial;
-			}
-
-			.xButtons {
-				position: absolute;
-				top:0px;
-				border:1px solid;
-				padding:10px;
-				font-family: arial;
-			}
-			.yButtons {
-				position: absolute;
-				top:150px;
-				border:1px solid;
-				padding:10px;
-				font-family: arial;
-			}
-		</style>
 
 	</head>
 	<body>
@@ -51,20 +29,22 @@
 					{% endfor %}
 				</table>
 			<div>
-			<div class="xButtons" align="left">
-				<p>Horisontal række</p>
-				<button class="button" type="button" onclick="newRow('y')">Tilføj række</button>
-				<button class="button" type="button" onclick="moveRow('y', '1')">Flyt en række up</button>
-				<button class="button" type="button" onclick="moveRow('y', '-1')">Flyt en række ned</button>
-			</div>
+			<div class="Menu">
 
-			<div class="yButtons" align="left">
-				Vertical række
-				<button class="button" type="button" onclick="newRow('y')">Tilføj række</button>
-				<button class="button" type="button" onclick="moveRow('y', '1')">Flyt en række up</button>
-				<button class="button" type="button" onclick="moveRow('y', '-1')">Flyt en række ned</button>
-			</div>
+				<div class="xButtons" align="left">
+					<p>Horisontal række</p>
+					<button class="button" type="button" onclick="newRow('y')">Tilføj række</button>
+					<button class="button" type="button" onclick="moveRow('y', '1')">Flyt en række up</button>
+					<button class="button" type="button" onclick="moveRow('y', '-1')">Flyt en række ned</button>
+				</div>
 
+				<div class="yButtons" align="left">
+					Vertical række
+					<button class="button" type="button" onclick="newRow('y')">Tilføj række</button>
+					<button class="button" type="button" onclick="moveRow('y', '1')">Flyt en række up</button>
+					<button class="button" type="button" onclick="moveRow('y', '-1')">Flyt en række ned</button>
+				</div>
+			</div>
 		</center>
 		<body>
 </html>
