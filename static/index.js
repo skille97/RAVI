@@ -1,6 +1,9 @@
 $(document).ready(function(){
     $(".data").click(function(){
-      $(this).replaceWith("<input type='text'></input>");
+      if(document.getElementsByTagName("input").length > 0){
+        $("#" + document.getElementsByTagName("input")[0].id).replaceWith("<td>test</td>")
+      }
+      $(this).replaceWith("<input id='" + $(this).attr("id") + "' type='text' value='" + $(this).html() + "'></input>");
 
     });
 
@@ -8,6 +11,7 @@ $(document).ready(function(){
       if(key.key === "Enter"){
         if(document.getElementsByTagName("input").length > 0){
           console.log(document.getElementsByTagName("input"));
+
         }
       }
     });

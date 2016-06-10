@@ -14,10 +14,9 @@
 					{% endfor %}
 				</tr>
 				{% for row in body %}
-				<tr>
+				<tr id="Col: {{loop.index0}}">
 					{% for rowrow in row %}
-					{# Rowrow, row your boat. #}
-					<td class="data">{{ rowrow }}</td>
+					<td class="data" id="Cell: {{loop.index0}}">{{ rowrow }}</td>
 					{% endfor %}
 				</tr>
 				{% endfor %}
