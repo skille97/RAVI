@@ -4,11 +4,36 @@
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'index.css') }}">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 		<script src="{{ url_for('static', filename = 'index.js') }}"></script>
+
+		<!-- Move me to a seperate script -->
+		<style>
+			.button {
+				display: block;
+				font-family: arial;
+			}
+
+			.xButtons {
+				position: absolute;
+				top:0px;
+				border:1px solid;
+				padding:10px;
+				font-family: arial;
+			}
+			.yButtons {
+				position: absolute;
+				top:150px;
+				border:1px solid;
+				padding:10px;
+				font-family: arial;
+			}
+		</style>
+
 	</head>
 	<body>
 		<script src="{{ url_for('static', filename = 'buttons.js') }}"></script>
-		
+
 		<center>
+			<button type="button" onclick="changeCell()">Ændre celle</button>
 			<table border="1" cellpadding="5" cellspacing="5">
 				<tr>
 					{% for row in headers %}
@@ -24,7 +49,20 @@
 				</tr>
 				{% endfor %}
 			</table>
-			<button type="button" onclick="newYrow()">Add row</button>
+			<div class="xButtons" align="left">
+				<p>Horisontal række</p>
+				<button class="button" type="button" onclick="newRow('y')">Tilføj række</button>
+				<button class="button" type="button" onclick="moveRow('y', '1')">Flyt en række up</button>
+				<button class="button" type="button" onclick="moveRow('y', '-1')">Flyt en række ned</button>
+			</div>
+
+			<div class="yButtons" align="left">
+				Vertical række
+				<button class="button" type="button" onclick="newRow('y')">Tilføj række</button>
+				<button class="button" type="button" onclick="moveRow('y', '1')">Flyt en række up</button>
+				<button class="button" type="button" onclick="moveRow('y', '-1')">Flyt en række ned</button>
+			</div>
+
 		</center>
 		<body>
 </html>
