@@ -19,23 +19,24 @@ def main():
 
 @app.route('/changeCell/', methods=['POST'])
 def changeCell():
-    cell=request.form['cell']
-    data=request.form['data']
-    return 1
+    cell=request.json['cell']
+    data=request.json['data']
+    print(cell + "     " + data)
+    return "true"
 
 
 @app.route('/moveRow/', methods=['POST'])
 def moveRow():
-    axis=request.form['axis']
-    start=request.form['from']
-    to=request.form['to']
+    axis=request.json['axis']
+    start=request.json['from']
+    to=request.json['to']
     return 1
 
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
-    axis=request.form['axis']
-    number=request.form['number']
+    axis=request.json['axis']
+    number=request.json['number']
     return 1
 
 

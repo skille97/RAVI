@@ -6,6 +6,8 @@
 		<script src="{{ url_for('static', filename = 'index.js') }}"></script>
 	</head>
 	<body>
+		<script src="{{ url_for('static', filename = 'buttons.js') }}"></script>
+		
 		<center>
 			<table border="1" cellpadding="5" cellspacing="5">
 				<tr>
@@ -22,6 +24,7 @@
 				</tr>
 				{% endfor %}
 			</table>
+			<button type="button" onclick="newYrow()">Add row</button>
 		</center>
 		<body>
 </html>
