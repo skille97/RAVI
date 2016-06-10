@@ -4,5 +4,25 @@
 
 .input {
     width: 50;
-    
+
+}
+
+.button {
+  display: block;
+  font-family: arial;
+}
+
+.xButtons {
+  position: absolute;
+  top:0px;
+  border:1px solid;
+  padding:10px;
+  font-family: arial;
+}
+.yButtons {
+  position: absolute;
+  top:150px;
+  border:1px solid;
+  padding:10px;
+  font-family: arial;
 }
