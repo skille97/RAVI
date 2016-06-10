@@ -14,10 +14,10 @@
 					{% endfor %}
 				</tr>
 				{% for row in body %}
-				{% set x = loop.index0%}
+				{% set y = loop.index0%}
 				<tr id="Row_{{loop.index0}}">
 					{% for rowrow in row %}
-					<td class="data" id="Cell_{{loop.index0}}" id2="{{x}}">{{ rowrow }}</td>
+					<td class="data" id="Cell_{{loop.index0}}_{{y}}">{{ rowrow }}</td>
 					{% endfor %}
 				</tr>
 				{% endfor %}
