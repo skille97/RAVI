@@ -27,6 +27,7 @@ def dbInit():
 def addEntry(name, comments, components, PCB):
     db = sqlite3.connect(db_name)
     c = db.cursor()
+    #Hold on to your butts, this is a long one.
     c.execute("INSERT INTO tasks (position, name, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM tasks), ?, ?, ?, ?, ?)", [name, comments, components, PCB, 1])
     db.commit()
     db.close()
