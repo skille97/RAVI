@@ -3,9 +3,15 @@ from flask import *
 import time
 app = Flask(__name__)
 
-log = open('log', 'a')
 
-log.write("(" + time.strftime("%c") + ")[Server]Starting server\n")
+#Logging stuff
+fl = open('log', 'a')
+def log(msg):
+    fl.write("(" + time.strftime("%c") + ")" + msg + "\n")
+
+
+
+log("Starting server")
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -23,7 +29,7 @@ def main():
 def changeCell():
     cell=request.form['cell']
     data=request.form['data']
-    log.write("(" + time.strftime("%c") + ")[Client]Ip: " + request.remote_addr + " changed " + cell + " to " + data + "\n")
+    log("Ip: " + request.remote_addr + " changed " + cell + " to " + data)
     return 1
 
 
@@ -32,7 +38,7 @@ def moveRow():
     axis=request.form['axis']
     start=request.form['from']
     to=request.form['to']
-    log.write("(" + time.strftime("%c") + ")[Client]Ip: " + request.remote_addr + " moved row " + start + " to " + to + " at axis " + axis + "\n")
+    log("Ip: " + request.remote_addr + " moved row " + start + " to " + to + " at axis " + axis)
     return 1
 
 
@@ -40,7 +46,7 @@ def moveRow():
 def addRow():
     axis=request.form['axis']
     number=request.form['number']
-    log.write("(" + time.strftime("%c") + ")[Client]Ip: " + request.remote_addr + " added row" + number + " at axis " + axis + "\n")
+    log("Ip: " + request.remote_addr + " added row" + number + " at axis " + axis)
     return 1
 
 
