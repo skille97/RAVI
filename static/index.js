@@ -18,10 +18,29 @@ $(document).ready(function(){
   });
 
   $(window).click(function(){
-    console.log("Dank")
+    console.log("Dank");
   });
 
   $("#add").click(function(){
     //Function runs when add cell button is pressed
-  });
-});
+    console.log("Dank2");
+    var name = prompt("name", "test")
+    $.ajax({
+      type: 'POST',
+      // Provide correct Content-Type, so that Flask will know how to process it.
+      contentType: 'application/json',
+      // Encode your data as JSON.
+      data: JSON.stringify({"text":name}),
+      // This is the type of data you're expecting back from the server.
+      dataType: 'json',
+      url: '/addRow/',
+      success: function (e) {
+          console.log(e);
+      }
+    });
+    });
+    });
+
+
+
+

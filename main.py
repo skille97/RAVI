@@ -48,35 +48,16 @@ def main():
     body = getTasks()
     return render_template('index.html', headers=headers, body=body)
 
-@app.route('/changeCell/', methods=['POST'])
-def changeCell():
-    cell=request.json['cell']
-    data=request.json['data']
-    print(cell + "     " + data)
-    return "true"
-
-
-@app.route('/moveRow/', methods=['POST'])
-def moveRow():
-    #Axis bliver givet i x og y
-    axis=request.json['axis']
-    row=request.json['row']
-    #Direc vil være -1 hvis det er ned eller til venstre. og direc vil være 1 hvis det er up eller højre
-    direc=request.json['direc']
-    print(axis + "     " + str(row) + "     " + direc)
-    return "True"
 
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
-    #Axis bliver givet i x og y, og ja jeg tjækker før det bliver sendt
-    axis=request.json['axis']
-    name=request.json['name']
-    print(axis + "     " + name)
+    text = request.json['text']
+    print(text)
     return "true"
 
 
 if __name__ == "__main__":
     dbInit()
-    addEntry("TestName", "TestComment", "TestComponent", "TestPCB")
+    #addEntry("TestName", "TestComment", "TestComponent", "TestPCB")
     app.run(debug=True, host="0.0.0.0")
