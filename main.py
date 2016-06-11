@@ -41,12 +41,12 @@ def updateCell(cell, value, newValue):
 
 @app.route('/updateRow/', methods=['POST'])
 def updateRow():
-    row = request.json('id')
-    value = request.json('value')
-    newValue = request.json('newValue')
-    print(row)
-    print(value)
-    print(newValue)
+    row = request.json['id']
+    value = request.json['value']
+    newValue = request.json['newValue']
+    updateCell(row, value, newValue)
+    # retrnes a sringe ingore
+    return "lol"
 
 
 def getTasks():
