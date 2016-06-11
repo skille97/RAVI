@@ -92,8 +92,8 @@ $(document).ready(function(){
   $("#add").click(function(){
     //Function runs when add cell button is pressed
     var name = prompt("name", "test");
-    if(name == "none"){
-      ajaxRequest("addRow", {"text": name});
+    if(name){
+    ajaxRequest("addRow", {"text": name});
     }
     updateStuff();
   });
