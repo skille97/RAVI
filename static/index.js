@@ -55,12 +55,14 @@ $(document).ready(function(){
   });
 
   $(window).click(function(){
+    //Input needs to go out of focus when anywhere else than the element itself is clicked
   });
 
   $("#add").click(function(){
     //Function runs when add cell button is pressed
     var name = prompt("name", "test");
     ajaxRequest("addRow", {"text": name});
+    updateStuff();
   });
 });
 
