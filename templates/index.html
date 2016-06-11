@@ -18,15 +18,6 @@
 						{% endfor %}
 					</tr>
 					{% for row in body %}
-					<tr>
-						{% for rowrow in row %}
-						{# Rowrow, row your boat. #}
-						<td class="data">{{ rowrow }}</td>
-						{% endfor %}
-					</tr>
-					{% endfor %}
-					</tr>
-					{% for row in body %}
 					{% set y = loop.index0%}
 					<tr id="Row_{{loop.index0}}">
 						{% for rowrow in row %}

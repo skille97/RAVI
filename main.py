@@ -46,6 +46,7 @@ def getTasks():
 def main():
     headers = ["ID", "Navn", "Kommentarer", "Components", "PCB"]
     body = getTasks()
+    print(body)
     return render_template('index.html', headers=headers, body=body)
 
 
@@ -59,5 +60,4 @@ def addRow():
 
 if __name__ == "__main__":
     dbInit()
-    addEntry("TestName", "TestComment", "TestComponent", "TestPCB")
     app.run(debug=True, host="0.0.0.0")
