@@ -1,4 +1,5 @@
 var tableEdit = false;
+var oldVal = "";
 
 $(document).ready(function(){
   function closeInput () {
@@ -44,6 +45,7 @@ $(document).ready(function(){
   $(document).on("click", ".data", function(event){
     event.stopPropagation();
     closeInput();
+    oldVal = $(this).html();
     $(this).replaceWith("<input class='inputField' id='" + $(this).attr("id") + "' type='text' value='" + $(this).html() + "'></input>");
     tableEdit = true;
   });
@@ -51,6 +53,29 @@ $(document).ready(function(){
   $(window).keydown(function(key){
     if(key.key === "Enter" || key.keyCode === 13){
       closeInput();
+      tableEdit = false;
+    }
+    if(key.keyCode === 27){
+      if(document.getElementsByTagName("input").length > 0){
+          var inputElement = document.getElementsByTagName("input")[0];
+          var colVal = false;
+          var colId = "";
+          for (var i = 0; i < inputElement.id.length; i++) {
+            if (inputElement.id[i] === "_") {
+              if (!colVal) {
+                  colVal = true;
+              }else{
+                  colVal = false;
+              }
+            }
+            if(colVal){
+              if (inputElement.id[i] !== "_") {
+                colId = colId + String(inputElement.id[i]);
+              }
+            }
+          }
+          $("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"'>" + oldVal + "</td>");
+      }
       tableEdit = false;
     }
   });
@@ -67,7 +92,9 @@ $(document).ready(function(){
   $("#add").click(function(){
     //Function runs when add cell button is pressed
     var name = prompt("name", "test");
-    ajaxRequest("addRow", {"text": name});
+    if(name == "none"){
+      ajaxRequest("addRow", {"text": name});
+    }
     updateStuff();
   });
 });
