@@ -49,7 +49,7 @@ $(document).ready(function(){
   });
 
   $(window).keydown(function(key){
-    if(key.key === "Enter"){
+    if(key.key === "Enter" || key.keyCode === 13){
       closeInput();
       tableEdit = false;
     }
