@@ -24,7 +24,7 @@ $(document).ready(function(){
   $("#add").click(function(){
     //Function runs when add cell button is pressed
     console.log("Dank2");
-    var name = prompt("name", "test")
+    var name = prompt("name", "test");
     $.ajax({
       type: 'POST',
       // Provide correct Content-Type, so that Flask will know how to process it.
@@ -38,9 +38,5 @@ $(document).ready(function(){
           console.log(e);
       }
     });
-    });
-    });
-
-
-
-
+  });
+});
