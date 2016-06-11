@@ -6,6 +6,22 @@ $(document).ready(function(){
     }
   }
 
+  function ajaxRequest (aUrl, aData) {
+    $.ajax({
+      type: 'POST',
+      // Provide correct Content-Type, so that Flask will know how to process it.
+      contentType: 'application/json',
+      // Encode your data as JSON.
+      data: JSON.stringify({"text":aData}),
+      // This is the type of data you're expecting back from the server.
+      dataType: 'json',
+      url: '/' + aUrl + '/',
+      success: function (e) {
+          console.log(e);
+      }
+    });
+  }
+
   $(document).on("click", ".data", function(){
     closeInput();
     $(this).replaceWith("<input id='" + $(this).attr("id") + "' type='text' value='" + $(this).html() + "'></input>");
@@ -23,9 +39,9 @@ $(document).ready(function(){
 
   $("#add").click(function(){
     //Function runs when add cell button is pressed
-    console.log("Dank2");
     var name = prompt("name", "test");
-    $.ajax({
+    ajaxRequest("addRow", name);
+    /*$.ajax({
       type: 'POST',
       // Provide correct Content-Type, so that Flask will know how to process it.
       contentType: 'application/json',
@@ -37,6 +53,6 @@ $(document).ready(function(){
       success: function (e) {
           console.log(e);
       }
-    });
+    });*/
   });
 });
