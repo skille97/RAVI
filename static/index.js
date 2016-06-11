@@ -90,12 +90,13 @@ $(document).ready(function(){
   })
 
   $("#add").click(function(){
+    if(!tableEdit){
     //Function runs when add cell button is pressed
     var name = prompt("name", "test");
     if(name){
     ajaxRequest("addRow", {"text": name});
     }
-    updateStuff();
+    updateStuff();}
   });
 });
 
