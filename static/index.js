@@ -2,6 +2,7 @@ $(document).ready(function(){
   function closeInput () {
     if(document.getElementsByTagName("input").length > 0){
         var inputElement = document.getElementsByTagName("input")[0];
+        
         $("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"'>" + inputElement.value + "</td>");
     }
   }
@@ -41,19 +42,5 @@ $(document).ready(function(){
     //Function runs when add cell button is pressed
     var name = prompt("name", "test");
     ajaxRequest("addRow", name);
-    /*$.ajax({
-      type: 'POST',
-      // Provide correct Content-Type, so that Flask will know how to process it.
-      contentType: 'application/json',
-      // Encode your data as JSON.
-      data: JSON.stringify({"text":name}),
-      // This is the type of data you're expecting back from the server.
-      dataType: 'json',
-      url: '/addRow/',
-      success: function (e) {
-          console.log(e);
-					location.reload();
-      }
-    });*/
   });
 });
