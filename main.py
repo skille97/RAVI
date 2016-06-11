@@ -32,12 +32,29 @@ def addEntry(name, comments, components, PCB):
     db.commit()
     db.close()
 
+def updateCell(cell, value, newValue):
+    db = sqlite3.connect(db_name)
+    c = db.cursor()
+    c.execute("UPDATE tasks SET " + value + " = ? WHERE id=?", [newValue, cell])
+    db.commit()
+    db.close()
+
+@app.route('/updateRow/', methods=['POST'])
+def updateRow():
+    row = request.json('id')
+    value = request.json('value')
+    newValue = request.json('newValue')
+    print(row)
+    print(value)
+    print(newValue)
+
+
 def getTasks():
     db = sqlite3.connect(db_name)
     cursor = db.cursor()
     body = []
     for row in cursor.execute("SELECT * FROM tasks WHERE visible=1 ORDER BY position"):
-        body.append([row[0], row[2], row[3], row[3], row[4]])
+        body.append([row[0], row[2], row[3], row[4], row[5]])
     return body
 
 
@@ -54,6 +71,7 @@ def main():
 @app.route('/addRow/', methods=['POST'])
 def addRow():
     text = request.json['text']
+    addEntry(text, "", "", "")
     print(text)
     return "true"
 

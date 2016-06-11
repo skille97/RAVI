@@ -52,6 +52,7 @@ $(document).ready(function(){
       url: '/addRow/',
       success: function (e) {
           console.log(e);
+					location.reload();
       }
     });*/
   });
