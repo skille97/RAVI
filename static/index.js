@@ -1,5 +1,7 @@
 var tableEdit = false;
 var oldVal = "";
+var genBoxOld = "";
+var genBoxEdit = false;
 
 $(document).ready(function(){
   function closeInput () {
@@ -50,12 +52,33 @@ $(document).ready(function(){
     tableEdit = true;
   });
 
+  $(document).on("click", ".genBox", function(event){
+    event.stopPropagation();
+    genBoxOld = $(this).html();
+    $(this).replaceWith("<textarea class='genBoxEdit'>" + $(this).html() + "</textarea>");
+    genBoxEdit = true;
+  });
+
+  function updateGenBox(safe){
+    if(safe && genBoxEdit){
+      ajaxRequest("setGenBox", {"val": $(".genBoxEdit").val()});
+      $(".genBoxEdit").replaceWith("<div class='genBox'>" + $(".genBoxEdit").val() + "</div>");
+    }else{
+      $(".genBoxEdit").replaceWith("<div class='genBox'>" + genBoxOld + "</div>");
+    }
+    genBoxEdit = false;
+  };
+
   $(window).keydown(function(key){
     if(key.key === "Enter" || key.keyCode === 13){
       closeInput();
+
+      updateGenBox(true);
+
       tableEdit = false;
     }
     if(key.keyCode === 27){
+      updateGenBox(false);
       if(document.getElementsByTagName("input").length > 0){
           var inputElement = document.getElementsByTagName("input")[0];
           var colVal = false;
@@ -101,6 +124,7 @@ $(document).ready(function(){
 
 function updateStuff(){
   if(!tableEdit){ $("#table").load(document.URL + ' #table'); }
+  if(!genBoxEdit){ $("#genBox").load(document.URL + ' #genBox'); }
 }
 
 

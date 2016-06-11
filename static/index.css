@@ -26,3 +26,21 @@
   padding:10px;
   font-family: arial;
 }
+
+
+.genBox {
+  position: absolute;
+  top:10px;
+  border:1px solid;
+  width: 30%;
+  height: 20%;
+}
+
+.genBoxEdit {
+  position: absolute;
+  top:10px;
+  border:1px solid;
+  width: 30%;
+  height: 20%;
+  text-align: left;
+}

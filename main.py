@@ -50,6 +50,12 @@ def updateRow():
     # retrnes a sringe ingore
     return "lol"
 
+@app.route('/setGenBox/', methods=['POST'])
+def setGenBox():
+    value = request.json["val"]
+    print(value);
+    return "lol"
+
 
 def getTasks():
     db = sqlite3.connect(db_name)
