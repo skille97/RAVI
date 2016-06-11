@@ -1,3 +1,5 @@
+var tableEdit = false;
+
 $(document).ready(function(){
   function closeInput () {
     if(document.getElementsByTagName("input").length > 0){
@@ -9,11 +11,13 @@ $(document).ready(function(){
   $(document).on("click", ".data", function(){
     closeInput();
     $(this).replaceWith("<input id='" + $(this).attr("id") + "' type='text' value='" + $(this).html() + "'></input>");
+    tableEdit = true;
   });
 
   $(window).keydown(function(key){
     if(key.key === "Enter"){
       closeInput();
+      tableEdit = false;
     }
   });
 
@@ -41,3 +45,12 @@ $(document).ready(function(){
     });
   });
 });
+
+function updateStuff(){
+  if(!tableEdit){ $("#table").load(document.URL + ' #table'); }
+}
+
+
+setInterval(function(){
+	updateStuff();
+}, 5000);
