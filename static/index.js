@@ -2,7 +2,7 @@ $(document).ready(function(){
   function closeInput () {
     if(document.getElementsByTagName("input").length > 0){
         var inputElement = document.getElementsByTagName("input")[0];
-        
+        //ajaxRequest("updateRow", )
         $("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"'>" + inputElement.value + "</td>");
     }
   }

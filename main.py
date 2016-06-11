@@ -45,8 +45,6 @@ def updateRow():
     value = request.json('value')
     newValue = request.json('newValue')
     print(row)
-    print(value)
-    print(newValue)
 
 
 def getTasks():
