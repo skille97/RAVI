@@ -44,6 +44,8 @@ def updateRow():
     row = request.json['id']
     value = request.json['value']
     newValue = request.json['newValue']
+    headers = ["id", "name", "comments", "components", "PCB"]
+    value = headers[int(value)]
     updateCell(row, value, newValue)
     # retrnes a sringe ingore
     return "lol"
@@ -63,7 +65,7 @@ def getTasks():
 def main():
     headers = ["ID", "Navn", "Kommentarer", "Components", "PCB"]
     body = getTasks()
-    print(body)
+    #print(body)
     return render_template('index.html', headers=headers, body=body)
 
 
