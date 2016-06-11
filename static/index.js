@@ -41,9 +41,10 @@ $(document).ready(function(){
     });
   }
 
-  $(document).on("click", ".data", function(){
+  $(document).on("click", ".data", function(event){
+    event.stopPropagation();
     closeInput();
-    $(this).replaceWith("<input id='" + $(this).attr("id") + "' type='text' value='" + $(this).html() + "'></input>");
+    $(this).replaceWith("<input class='inputField' id='" + $(this).attr("id") + "' type='text' value='" + $(this).html() + "'></input>");
     tableEdit = true;
   });
 
@@ -56,7 +57,12 @@ $(document).ready(function(){
 
   $(window).click(function(){
     //Input needs to go out of focus when anywhere else than the element itself is clicked
+    closeInput();
   });
+
+  $(document).on("click", ".inputField",function(event){
+    event.stopPropagation();
+  })
 
   $("#add").click(function(){
     //Function runs when add cell button is pressed
