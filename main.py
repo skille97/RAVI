@@ -54,6 +54,7 @@ def main():
 @app.route('/addRow/', methods=['POST'])
 def addRow():
     text = request.json['text']
+    addEntry(text, "", "", "")
     print(text)
     return "true"
 
