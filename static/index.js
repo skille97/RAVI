@@ -1,3 +1,5 @@
+var tableEdit = true;
+
 $(document).ready(function(){
   function closeInput () {
     if(document.getElementsByTagName("input").length > 0){
@@ -40,4 +42,8 @@ $(document).ready(function(){
       }
     });
   });
+});
+
+setInterval(function(){
+	if(!tableEdit){ $("#table").load(document.URL + ' #table'); }
 });
