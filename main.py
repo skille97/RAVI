@@ -32,10 +32,10 @@ def addEntry(name, comments, components, PCB):
     db.commit()
     db.close()
 
-def updateCell(row, value, newValue):
+def updateCell(row, column, newValue):
     db = sqlite3.connect(db_name)
     c = db.cursor()
-    c.execute("UPDATE tasks SET " + value + " = ? WHERE id=?", [newValue, row])
+    c.execute("UPDATE tasks SET " + column + " = ? WHERE id=?", [newValue, row])
     db.commit()
     db.close()
 

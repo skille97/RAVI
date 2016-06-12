@@ -21,7 +21,7 @@ $(document).ready(function(){
             }
           }
         }
-        ajaxRequest("updateRow",{"id":parseInt($("#" + inputElement.id).parent().attr("id")) + 1, "value":colId, "newValue": inputElement.value})
+        ajaxRequest("updateRow",{"id":parseInt($("#" + inputElement.id).parent().attr("id")) + 1, "column":colId, "newValue": inputElement.value})
         $("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"'>" + inputElement.value + "</td>");
     }
   }
