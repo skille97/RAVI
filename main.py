@@ -42,11 +42,11 @@ def updateCell(row, column, newValue):
 @app.route('/updateRow/', methods=['POST'])
 def updateRow():
     row = request.json['id']
-    value = request.json['value']
+    column = request.json['column']
     newValue = request.json['newValue']
     headers = ["id", "name", "comments", "components", "PCB"]
-    value = headers[int(value)]
-    updateCell(row, value, newValue)
+    column = headers[int(column)]
+    updateCell(row, column, newValue)
     # retrnes a sringe ingore
     return "lol"
 
