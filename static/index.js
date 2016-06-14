@@ -43,11 +43,13 @@ $(document).ready(function(){
   }
 
   $(document).on("click", ".data", function(event){
-    event.stopPropagation();
-    closeInput();
-    oldVal = $(this).html();
-    $(this).replaceWith("<input class='inputField' id='" + $(this).attr("id") + "' type='text' value='" + $(this).html() + "'></input>");
-    tableEdit = true;
+		if (!$(this).attr('id').startsWith("Cell_0")) {
+			event.stopPropagation();
+    	closeInput();
+    	oldVal = $(this).html();
+    	$(this).replaceWith("<input class='inputField' id='" + $(this).attr("id") + "' type='text' value='" + $(this).html() + "'></input>");
+    	tableEdit = true;
+		}
   });
 
   $(window).keydown(function(key){
