@@ -24,6 +24,7 @@ def dbInit():
                """)
     db.close()
 
+#Add entry with the name, comments, components and PCB as values
 def addEntry(name, comments, components, PCB):
     db = sqlite3.connect(db_name)
     c = db.cursor()
@@ -32,6 +33,7 @@ def addEntry(name, comments, components, PCB):
     db.commit()
     db.close()
 
+#Update the cell with the ID row. Then the column "column" is set to newValue. 
 def updateCell(row, column, newValue):
     db = sqlite3.connect(db_name)
     c = db.cursor()
@@ -56,19 +58,15 @@ def getTasks():
     cursor = db.cursor()
     body = []
     for row in cursor.execute("SELECT * FROM tasks WHERE visible=1 ORDER BY position"):
-        body.append([row[0], row[2], row[3], row[4], row[5]])
+        body.append([row[0], row[2], row[5], row[4], row[3]])
     return body
 
 
 
 @app.route("/")
 def main():
-    headers = ["ID", "Navn", "Kommentarer", "Components", "PCB"]
-    body = getTasks()
-    #print(body)
-    return render_template('index.html', headers=headers, body=body)
-
-
+    headers = ["ID", "Navn", "PCB", "Components", "Kommentarer"]
+    return render_template('index.html', headers=headers, body=getTasks())
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
