@@ -33,7 +33,7 @@ def addEntry(name, comments, components, PCB):
     db.commit()
     db.close()
 
-#Update the cell with the ID row. Then the column "column" is set to newValue. 
+#Update the cell with the ID row. Then the column "column" is set to newValue.
 def updateCell(row, column, newValue):
     db = sqlite3.connect(db_name)
     c = db.cursor()
@@ -46,12 +46,17 @@ def updateRow():
     row = request.json['id']
     column = request.json['column']
     newValue = request.json['newValue']
-    headers = ["id", "name", "comments", "components", "PCB"]
+    headers = ["id", "name", "PCB", "components", "comments"]
     column = headers[int(column)]
     updateCell(row, column, newValue)
     # retrnes a sringe ingore
     return "lol"
 
+@app.route('/hideRow/', methods=['POST'])
+def hideRow():
+    row = request.json['id']
+    updateCell(row, "visible", 0)
+    return "Row number" + str(row) + " hidden"
 
 def getTasks():
     db = sqlite3.connect(db_name)
@@ -65,7 +70,7 @@ def getTasks():
 
 @app.route("/")
 def main():
-    headers = ["ID", "Navn", "PCB", "Components", "Kommentarer"]
+    headers = ["ID", "Navn", "PCB", "Components", "Kommentarer", "Komplet"]
     return render_template('index.html', headers=headers, body=getTasks())
 
 @app.route('/addRow/', methods=['POST'])

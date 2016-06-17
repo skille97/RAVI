@@ -19,10 +19,11 @@
 					</tr>
 					{% for row in body %}
 					{% set y = loop.index0%}
-					<tr id="{{loop.index0}}">
+					<tr id="{{row[0]}}">
 						{% for rowrow in row %}
-						<td class="data" id="Cell_{{loop.index0}}_{{y}}">{{ rowrow }}</td>
+						<td class="data" id="Cell_{{loop.index0}}_{{row[0]}}">{{ rowrow }}</td>
 						{% endfor %}
+						<td><input type="checkbox" onclick="hideRow({{row[0]}})"></input></td>
 					</tr>
 					{% endfor %}
 				</table>
