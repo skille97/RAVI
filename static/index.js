@@ -25,6 +25,7 @@ $(document).ready(function(){
 			var id = parseInt($("#" + inputElement.id).parent().attr("id"));
 			ajaxRequest("updateRow",{"id": id, "column":colId, "newValue": inputElement.value})
 			$("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"'>" + inputElement.value + "</td>");
+			tableEdit = false;
 		}
 	}
 
@@ -95,13 +96,13 @@ $(document).ready(function(){
 	})
 
 	$("#add").click(function(){
-		if(!tableEdit){
+			closeInput();
 			//Function runs when add cell button is pressed
 			var name = prompt("name", "test");
 			if(name){
 				ajaxRequest("addRow", {"text": name});
 			}
-			updateStuff();}
+			updateStuff();
 	});
 });
 
