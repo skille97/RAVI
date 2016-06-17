@@ -64,22 +64,6 @@ $(document).ready(function(){
 		if(key.keyCode === 27){
 			if(document.getElementsByTagName("input").length > 0){
 				var inputElement = document.getElementsByTagName("input")[0];
-				var colVal = false;
-				var colId = "";
-				for (var i = 0; i < inputElement.id.length; i++) {
-					if (inputElement.id[i] === "_") {
-						if (!colVal) {
-							colVal = true;
-						}else{
-							colVal = false;
-						}
-					}
-					if(colVal){
-						if (inputElement.id[i] !== "_") {
-							colId = colId + String(inputElement.id[i]);
-						}
-					}
-				}
 				$("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"'>" + oldVal + "</td>");
 			}
 			tableEdit = false;
@@ -122,9 +106,11 @@ function hideRow(row) {
 		url: '/hideRow/',
 		success: function (e) {
 			console.log(e);
-			updateStuff();
+
 		}
-	});}
+	});
+	updateStuff();
+	}
 
 
 	setInterval(function(){
