@@ -16,6 +16,11 @@ def dbInit():
                 id INTEGER PRIMARY KEY NOT NULL,
                 position INTEGER NOT NULL,
                 name TEXT,
+                data TEXT,
+                stencil TEXT,
+                program TEXT,
+                montage TEXT,
+                delivery TEXT,
                 comments TEXT,
                 components TEXT,
                 PCB TEXT,
@@ -46,7 +51,7 @@ def updateRow():
     row = request.json['id']
     column = request.json['column']
     newValue = request.json['newValue']
-    headers = ["id", "name", "PCB", "components", "comments"]
+    headers = ["id", "name", "data", "stencil", "program", "montage", "delivery", "PCB", "components", "comments"]
     column = headers[int(column)]
     updateCell(row, column, newValue)
     # retrnes a sringe ingore
@@ -63,14 +68,14 @@ def getTasks():
     cursor = db.cursor()
     body = []
     for row in cursor.execute("SELECT * FROM tasks WHERE visible=1 ORDER BY position"):
-        body.append([row[0], row[2], row[5], row[4], row[3]])
+        body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
     return body
 
 
 
 @app.route("/")
 def main():
-    headers = ["ID", "Navn", "PCB", "Components", "Kommentarer", "Komplet"]
+    headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Komplet"]
     return render_template('index.html', headers=headers, body=getTasks())
 
 @app.route('/addRow/', methods=['POST'])
