@@ -14,7 +14,7 @@ $(document).bind("contextmenu", function (event) {
 
     // In the right position (the mouse)
     css({
-        'margin-top': event.pageY + "px",
+        'margin-top': event.pageY - 100 + "px",
         'margin-left': event.pageX + "px"
     });
 });
