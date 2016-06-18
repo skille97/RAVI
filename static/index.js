@@ -4,6 +4,37 @@ var oldVal = "";
 //Variable to store the id of the right clicked cell, that is needed in the rightclick menu(See rightClick.js)
 var rightClickedCell = "";
 
+//Functions to be defined outside of document.ready
+function ajaxRequest (aUrl, aData) {
+  $.ajax({
+    type: 'POST',
+    // Provide correct Content-Type, so that Flask will know how to process it.
+    contentType: 'application/json',
+    // Encode your data as JSON.
+    data: JSON.stringify(aData),
+    // This is the type of data you're expecting back from the server.
+    dataType: 'json',
+    url: '/' + aUrl + '/',
+    success: function (e) {
+      updateStuff();
+    }
+  });
+}
+
+function updateStuff(){
+	if (!tableEdit) $("#table").load(document.URL + ' #table'); //location.reload();
+}
+
+function hideRow(row) {
+  ajaxRequest("hideRow", {"id": row});
+	updateStuff();
+	}
+
+	setInterval(function(){
+		updateStuff();
+	}, 5000);
+
+//Function will run when all the HTML has been loaded.
 $(document).ready(function(){
 	function closeInput () {
 		if($('input.inputField').length > 0){
@@ -29,22 +60,6 @@ $(document).ready(function(){
 			$("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"'>" + inputElement.value + "</td>");
 			tableEdit = false;
 		}
-	}
-
-	function ajaxRequest (aUrl, aData) {
-		$.ajax({
-			type: 'POST',
-			// Provide correct Content-Type, so that Flask will know how to process it.
-			contentType: 'application/json',
-			// Encode your data as JSON.
-			data: JSON.stringify(aData),
-			// This is the type of data you're expecting back from the server.
-			dataType: 'json',
-			url: '/' + aUrl + '/',
-			success: function (e) {
-				updateStuff();
-			}
-		});
 	}
 
 	$(document).on("click", ".data", function(event){
@@ -95,29 +110,3 @@ $(document).ready(function(){
 			updateStuff();
 	});
 });
-
-function updateStuff(){
-	if (!tableEdit) $("#table").load(document.URL + ' #table'); //location.reload();
-}
-
-function hideRow(row) {
-	$.ajax({
-		type: 'POST',
-		// Provide correct Content-Type, so that Flask will know how to process it.
-		contentType: 'application/json',
-		// Encode your data as JSON.
-		data: JSON.stringify({'id': row}),
-		// This is the type of data you're expecting back from the server.
-		dataType: 'json',
-		url: '/hideRow/',
-		success: function (e) {
-
-		}
-	});
-	updateStuff();
-	}
-
-
-	setInterval(function(){
-		updateStuff();
-	}, 5000);
