@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from flask import *
 import sqlite3
+import re
 app = Flask(__name__)
 
 db_name = "RAVI.db"
@@ -42,6 +43,8 @@ def addEntry(name, comments, components, PCB):
 def updateCell(row, column, newValue):
     db = sqlite3.connect(db_name)
     c = db.cursor()
+    #Remove anything that isn't a character from a-Z from the column value with a regex. This should help against SQL injection.
+    column = re.sub("[^a-zA-Z]","", column)
     c.execute("UPDATE tasks SET " + column + " = ? WHERE id=?", [newValue, row])
     db.commit()
     db.close()
