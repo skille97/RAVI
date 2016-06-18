@@ -1,9 +1,11 @@
 var tableEdit = false;
 var oldVal = "";
 
+//Variable to store the id of the right clicked cell, that is needed in the rightclick menu(See rightClick.js)
+var rightClickedCell = "";
+
 $(document).ready(function(){
 	function closeInput () {
-		console.log($('input.inputField'));
 		if($('input.inputField').length > 0){
 			var inputElement = $("input.inputField")[0];
 			var colVal = false;
@@ -40,7 +42,6 @@ $(document).ready(function(){
 			dataType: 'json',
 			url: '/' + aUrl + '/',
 			success: function (e) {
-				console.log(e);
 				updateStuff();
 			}
 		});
@@ -55,6 +56,11 @@ $(document).ready(function(){
 			tableEdit = true;
 		}
 	});
+
+	$(document).on("contextmenu", ".data", function(event){
+		console.log("Right clicked bois");
+		rightClickedCell = $(this).attr("id");
+	})
 
 	$(window).keydown(function(key){
 		if(key.key === "Enter" || key.keyCode === 13){
@@ -105,7 +111,6 @@ function hideRow(row) {
 		dataType: 'json',
 		url: '/hideRow/',
 		success: function (e) {
-			console.log(e);
 
 		}
 	});

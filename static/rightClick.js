@@ -2,6 +2,10 @@
 
 $(".custom-menu").hide();
 
+function cellColor(newColor){
+  $("#" + rightClickedCell).css("background-color", newColor);
+}
+
 // Trigger action when the contexmenu is about to be shown
 $(document).bind("contextmenu", function (event) {
 
@@ -14,7 +18,7 @@ $(document).bind("contextmenu", function (event) {
 
     // In the right position (the mouse)
     css({
-        'margin-top': event.pageY - 100 + "px",
+        'margin-top': event.pageY - 130 + "px",
         'margin-left': event.pageX + "px"
     });
 });
@@ -34,14 +38,13 @@ $(document).bind("mousedown", function (e) {
 
 // If the menu element is clicked
 $(".custom-menu li").click(function(){
-    console.log($(this).attr("data-action"));
     // This is the triggered action name
     switch($(this).attr("data-action")) {
 
         // A case for each action. Your actions here
-        case "first": alert("first"); break;
-        case "second": alert("second"); break;
-        case "third": alert("third"); break;
+        case "red": cellColor("#ff0000"); break;
+        case "yellow": cellColor("#ffe600"); break;
+        case "green": cellColor("#63eb05"); break;
     }
 
     // Hide it AFTER the action was triggered
