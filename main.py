@@ -22,6 +22,16 @@ def dbInit():
                 visible INTEGER
                 )
                """)
+    db.execute("""CREATE TABLE IF NOT EXISTS colours (
+                id INTEGER PRIMARY KEY NOT NULL,
+                position INTEGER NOT NULL,
+                name TEXT,
+                comments TEXT,
+                components TEXT,
+                PCB TEXT,
+                visible INTEGER
+                )
+               """)
     db.close()
 
 #Add entry with the name, comments, components and PCB as values
@@ -30,6 +40,7 @@ def addEntry(name, comments, components, PCB):
     c = db.cursor()
     #Hold on to your butts, this is a long one.
     c.execute("INSERT INTO tasks (position, name, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM tasks), ?, ?, ?, ?, ?)", [name, comments, components, PCB, 1])
+    c.execute("INSERT INTO colours (position, name, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM colours), ?, ?, ?, ?, ?)", [name, comments, components, PCB, 1])
     db.commit()
     db.close()
 
@@ -80,6 +91,9 @@ def addRow():
     print(text)
     return "true"
 
+@app.route('/updateColour/', methods=['POST'])
+def updateColour():
+    print("yay")
 
 if __name__ == "__main__":
     dbInit()
