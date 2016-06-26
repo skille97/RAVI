@@ -40,7 +40,7 @@ def addEntry(name, comments, components, PCB):
     c = db.cursor()
     #Hold on to your butts, this is a long one.
     c.execute("INSERT INTO tasks (position, name, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM tasks), ?, ?, ?, ?, ?)", [name, comments, components, PCB, 1])
-    c.execute("INSERT INTO colours (position, name, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM colours), ?, ?, ?, ?, ?)", [name, comments, components, PCB, 1])
+    c.execute("INSERT INTO colours (position, name, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM colours), ' ', ' ', ' ', ' ', 1)")
     db.commit()
     db.close()
 
@@ -57,7 +57,6 @@ def updateRow():
     row = request.json['id']
     column = request.json['column']
     newValue = request.json['newValue']
-    headers = ["id", "name", "PCB", "components", "comments"]
     column = headers[int(column)]
     updateCell(row, column, newValue)
     # retrnes a sringe ingore
@@ -77,12 +76,19 @@ def getTasks():
         body.append([row[0], row[2], row[5], row[4], row[3]])
     return body
 
-
+def getColours():
+    db = sqlite3.connect(db_name)
+    cursor = db.cursor()
+    colours = []
+    for row in cursor.execute("SELECT * FROM colours WHERE visible=1 ORDER BY position"):
+        colours.append([row[0], row[2], row[5], row[4], row[3]])
+    return colours
 
 @app.route("/")
 def main():
     headers = ["ID", "Navn", "PCB", "Components", "Kommentarer", "Komplet"]
-    return render_template('index.html', headers=headers, body=getTasks())
+    print(getTasks())
+    return render_template('index.html', headers=headers, body=getTasks(), colours=getColours())
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
@@ -93,8 +99,16 @@ def addRow():
 
 @app.route('/updateColour/', methods=['POST'])
 def updateColour():
-    print("yay")
+    print(request.json)
+    column = headers[int(request.json['column'])]
+    db = sqlite3.connect(db_name)
+    c = db.cursor()
+    c.execute("UPDATE colours SET " + column + " = ? WHERE id=?", [request.json['colour'], str(request.json['row'])])
+    db.commit()
+    db.close()
+    return "true"
 
 if __name__ == "__main__":
+    headers = ["id", "name", "PCB", "components", "comments"]
     dbInit()
     app.run(debug=True, host="0.0.0.0")

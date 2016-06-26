@@ -4,7 +4,7 @@ $(".custom-menu").hide();
 
 function cellColor(newColor){
   $("#" + rightClickedCell).css("background-color", newColor);
-  /*var colVal = false;
+  var colVal = false;
   var colId = "";
   for (var i = 0; i < rightClickedCell.length; i++) {
     if (rightClickedCell[i] === "_") {
@@ -19,9 +19,9 @@ function cellColor(newColor){
         colId = colId + String(rightClickedCell[i]);
       }
     }
-  }*/
-  ajaxRequest("updateColour", "test");
-  //ajaxRequest("/updateColour/", {colour : newColor, row : "kek", column : colId});
+  }
+  var rowId = parseInt($("#" + rightClickedCell).parent().attr("id"));
+  ajaxRequest("updateColour", {colour : newColor, row : rowId, column : colId});
 }
 
 // Trigger action when the contexmenu is about to be shown
