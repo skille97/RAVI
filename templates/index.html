@@ -21,7 +21,7 @@
 					{% set y = loop.index0%}
 					<tr id="{{row[0]}}">
 						{% for rowrow in row %}
-						<td class="data" id="Cell_{{loop.index0}}_{{row[0]}}">{{ rowrow }}</td>
+						<td class="data" id="Cell_{{loop.index0}}_{{row[0]}}" style="background-color: {{colours[y][loop.index0]}}">{{ rowrow }}</td>
 						{% endfor %}
 						<td><input type="checkbox" onclick="hideRow({{row[0]}})"></input></td>
 					</tr>
@@ -34,8 +34,5 @@
 		  <li data-action="green" style="color: #63eb05">Grøn</li>
 		</ul>
 		<script src="{{ url_for('static', filename = 'rightClick.js') }}"></script>
-		<p onclick="console.log({{colours}});">
-			kek man
-		</p>
 		<body>
 </html>

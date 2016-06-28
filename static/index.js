@@ -22,7 +22,9 @@ function ajaxRequest (aUrl, aData) {
 }
 
 function updateStuff(){
-	if (!tableEdit) $("#table").load(document.URL + ' #table'); //location.reload();
+	if (!tableEdit) $("#table").load(document.URL + ' #table', function(){
+    fixWhiteColumn();
+  }); //location.reload();
 }
 
 function hideRow(row) {
@@ -30,33 +32,45 @@ function hideRow(row) {
 	updateStuff();
 	}
 
+function columnId(cell){
+  var colVal = false;
+  var colId = "";
+  for (var i = 0; i < cell.length; i++) {
+    if (cell[i] === "_") {
+      if (!colVal) {
+        colVal = true;
+      } else {
+        colVal = false;
+      }
+    }
+    if (colVal) {
+      if (cell[i] !== "_") {
+        colId = colId + String(cell[i]);
+      }
+    }
+  }
+  return colId;
+}
+
 	setInterval(function(){
 		updateStuff();
 	}, 5000);
+
+function fixWhiteColumn(){
+  $(".data").each(function(){
+    if(columnId($(this).attr("id")) == 0){
+      $(this).css("background-color","#ffffff")
+    }
+  });
+}
 
 //Function will run when all the HTML has been loaded.
 $(document).ready(function(){
 	function closeInput () {
 		if($('input.inputField').length > 0){
 			var inputElement = $("input.inputField")[0];
-			var colVal = false;
-			var colId = "";
-			for (var i = 0; i < inputElement.id.length; i++) {
-				if (inputElement.id[i] === "_") {
-					if (!colVal) {
-						colVal = true;
-					} else {
-						colVal = false;
-					}
-				}
-				if (colVal) {
-					if (inputElement.id[i] !== "_") {
-						colId = colId + String(inputElement.id[i]);
-					}
-				}
-			}
 			var id = parseInt($("#" + inputElement.id).parent().attr("id"));
-			ajaxRequest("updateRow",{"id": id, "column":colId, "newValue": inputElement.value})
+			ajaxRequest("updateRow",{"id": id, "column":columnId(inputElement.id), "newValue": inputElement.value})
 			$("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"'>" + inputElement.value + "</td>");
 			tableEdit = false;
 		}
@@ -72,10 +86,21 @@ $(document).ready(function(){
 		}
 	});
 
-	$(document).on("contextmenu", ".data", function(event){
-		console.log("Right clicked bois");
-		rightClickedCell = $(this).attr("id");
-	})
+	/*$(document).on("contextmenu", ".data", function(event){
+    rightClickedCell = $(this).attr("id");
+    console.log(rightClickedCell);
+	});*/
+
+  $(document).on("contextmenu", ".data", function(event){
+    rightClickedCell = $(this).attr("id");
+
+    /*rightClickedCell = "dank click";
+    if($(this).attr("class") === "data"){
+      console.log("cell");
+      rightClickedCell = $(this).attr("id");
+    }
+    console.log(rightClickedCell);*/
+  });
 
 	$(window).keydown(function(key){
 		if(key.key === "Enter" || key.keyCode === 13){
@@ -109,4 +134,5 @@ $(document).ready(function(){
 			}
 			updateStuff();
 	});
+  fixWhiteColumn();
 });

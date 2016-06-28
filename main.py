@@ -87,19 +87,16 @@ def getColours():
 @app.route("/")
 def main():
     headers = ["ID", "Navn", "PCB", "Components", "Kommentarer", "Komplet"]
-    print(getTasks())
     return render_template('index.html', headers=headers, body=getTasks(), colours=getColours())
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
     text = request.json['text']
     addEntry(text, "", "", "")
-    print(text)
     return "true"
 
 @app.route('/updateColour/', methods=['POST'])
 def updateColour():
-    print(request.json)
     column = headers[int(request.json['column'])]
     db = sqlite3.connect(db_name)
     c = db.cursor()
