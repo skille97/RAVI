@@ -50,9 +50,11 @@ def conveter(filename):
         del text[i - o]
         o += 1
 
-    with open("output.csv", "w", newline="") as f:
+    with open(filename + ".csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerows(text)
+    
+    return filename + ".csv"
 
 if __name__ == "__main__":
     conveter("lang")
