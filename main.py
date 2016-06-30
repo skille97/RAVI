@@ -1,7 +1,21 @@
 #!/usr/bin/env python3
 from flask import *
 import sqlite3
+import re
+import atexit
+
+#BOM stuff
+import os
+from werkzeug.utils import secure_filename
+from BOM.bom import conveter
+import shutil
+
+#for tempfiles
+UPLOAD_FOLDER = './upload/'
+
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 db_name = "RAVI.db"
 
@@ -16,6 +30,11 @@ def dbInit():
                 id INTEGER PRIMARY KEY NOT NULL,
                 position INTEGER NOT NULL,
                 name TEXT,
+                data TEXT,
+                stencil TEXT,
+                program TEXT,
+                montage TEXT,
+                delivery TEXT,
                 comments TEXT,
                 components TEXT,
                 PCB TEXT,
@@ -48,6 +67,8 @@ def addEntry(name, comments, components, PCB):
 def updateCell(row, column, newValue):
     db = sqlite3.connect(db_name)
     c = db.cursor()
+    #Remove anything that isn't a character from a-Z from the column value with a regex. This should help against SQL injection.
+    column = re.sub("[^a-zA-Z]","", column)
     c.execute("UPDATE tasks SET " + column + " = ? WHERE id=?", [newValue, row])
     db.commit()
     db.close()
@@ -79,7 +100,7 @@ def getTasks():
     cursor = db.cursor()
     body = []
     for row in cursor.execute("SELECT * FROM tasks WHERE visible=1 ORDER BY position"):
-        body.append([row[0], row[2], row[5], row[4], row[3]])
+        body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
     return body
 
 def getColours():
@@ -87,13 +108,14 @@ def getColours():
     cursor = db.cursor()
     colours = []
     for row in cursor.execute("SELECT * FROM colours WHERE visible=1 ORDER BY position"):
-        colours.append([row[0], row[2], row[5], row[4], row[3]])
+        colours.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
     return colours
 
 @app.route("/")
 def main():
-    headers = ["ID", "Navn", "PCB", "Components", "Kommentarer", "Komplet"]
+    headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Komplet"]
     return render_template('index.html', headers=headers, body=getTasks(), colours=getColours())
+
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
@@ -111,7 +133,43 @@ def updateColour():
     db.close()
     return "true"
 
+
+
+
+@app.route('/bom/', methods=['GET', 'POST'])
+def upload_file():
+    #Check if there is a request
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file:
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+            #Run the converter
+            conveter(UPLOAD_FOLDER + file.filename);
+            #Send converted file back to user
+            return send_file(UPLOAD_FOLDER + file.filename + ".csv", as_attachment=True)
+    #If no file is uploaded send bom html upload site
+    return render_template('bom.html')
+
+
+#Remove tempfiles on exit
+@atexit.register
+def exit():
+    print("Removing temp files")
+    shutil.rmtree(UPLOAD_FOLDER)
+    os.makedirs(UPLOAD_FOLDER)
+
+
+
 if __name__ == "__main__":
-    headers = ["id", "name", "PCB", "components", "comments"]
+    headers = ["id", "name", "data", "stencil", "program", "montage", "delivery", "PCB", "components", "comments"]
     dbInit()
     app.run(debug=True, host="0.0.0.0")
