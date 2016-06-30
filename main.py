@@ -66,6 +66,12 @@ def updateRow():
 def hideRow():
     row = request.json['id']
     updateCell(row, "visible", 0)
+    #Updates the colour database
+    db = sqlite3.connect(db_name)
+    c = db.cursor()
+    c.execute("UPDATE colours SET " + "visible" + " = ? WHERE id=?", ["0", row])
+    db.commit()
+    db.close()
     return "Row number" + str(row) + " hidden"
 
 def getTasks():
