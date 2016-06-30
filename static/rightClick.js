@@ -3,26 +3,11 @@
 $(".custom-menu").hide();
 
 function cellColor(newColor){
-
-  $("#" + rightClickedCell).css("background-color", newColor);
-  /*var colVal = false;
-  var colId = "";
-  for (var i = 0; i < rightClickedCell.length; i++) {
-    if (rightClickedCell[i] === "_") {
-      if (!colVal) {
-        colVal = true;
-      } else {
-        colVal = false;
-      }
-    }
-    if (colVal) {
-      if (rightClickedCell[i] !== "_") {
-        colId = colId + String(rightClickedCell[i]);
-      }
-    }
-  }*/
-  var rowId = parseInt($("#" + rightClickedCell).parent().attr("id"));
-  ajaxRequest("updateColour", {colour : newColor, row : rowId, column : columnId(rightClickedCell)});
+  if(rightClickedCell !== "" && columnId(rightClickedCell) != 0){
+    $("#" + rightClickedCell).css("background-color", newColor);
+    var rowId = parseInt($("#" + rightClickedCell).parent().attr("id"));
+    ajaxRequest("updateColour", {colour : newColor, row : rowId, column : columnId(rightClickedCell)});
+  }
 }
 
 // Trigger action when the contexmenu is about to be shown

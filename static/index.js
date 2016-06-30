@@ -86,20 +86,14 @@ $(document).ready(function(){
 		}
 	});
 
-	/*$(document).on("contextmenu", ".data", function(event){
-    rightClickedCell = $(this).attr("id");
-    console.log(rightClickedCell);
-	});*/
-
   $(document).on("contextmenu", ".data", function(event){
     rightClickedCell = $(this).attr("id");
 
-    /*rightClickedCell = "dank click";
-    if($(this).attr("class") === "data"){
-      console.log("cell");
-      rightClickedCell = $(this).attr("id");
+  });
+  $(document).on("contextmenu", "body", function(event){
+    if(event.target.className !== "data"){
+      rightClickedCell = "";
     }
-    console.log(rightClickedCell);*/
   });
 
 	$(window).keydown(function(key){
