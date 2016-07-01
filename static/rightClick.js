@@ -46,6 +46,7 @@ $(".custom-menu li").click(function(){
     switch($(this).attr("data-action")) {
 
         // A case for each action. Your actions here
+        case "white": cellColor("#ffffff"); break;
         case "red": cellColor("#ff0000"); break;
         case "yellow": cellColor("#ffe600"); break;
         case "green": cellColor("#63eb05"); break;
