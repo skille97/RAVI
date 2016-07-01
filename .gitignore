@@ -65,3 +65,6 @@ target/
 
 #Database files
 *.db
+
+#VScode folder
+.vscode
