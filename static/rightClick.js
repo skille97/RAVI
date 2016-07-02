@@ -22,7 +22,7 @@ $(document).bind("contextmenu", function (event) {
 
     // In the right position (the mouse)
     css({
-        'margin-top': event.pageY - 130 + "px",
+        'margin-top': event.pageY + "px",
         'margin-left': event.pageX + "px"
     });
 });
