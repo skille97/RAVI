@@ -44,11 +44,11 @@ def dbInit():
     db.close()
 
 #Add entry with the name, comments, components and PCB as values
-def addEntry(name, comments, components, PCB):
+def addEntry(name, data, stencil, program, montage, delivery, comments, components, PCB):
     db = sqlite3.connect(db_name)
     c = db.cursor()
     #Hold on to your butts, this is a long one.
-    c.execute("INSERT INTO tasks (position, name, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM tasks), ?, ?, ?, ?, ?)", [name, comments, components, PCB, 1])
+    c.execute("INSERT INTO tasks (position, name, data, stencil, program, montage, delivery, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM tasks), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [name, data, stencil, program, montage, delivery, comments, components, PCB, 1])
     c.execute("INSERT INTO colours (position, name, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM colours), ' ', ' ', ' ', ' ', 1)")
     db.commit()
     db.close()
@@ -110,7 +110,7 @@ def main():
 @app.route('/addRow/', methods=['POST'])
 def addRow():
     text = request.json['text']
-    addEntry(text, "", "", "")
+    addEntry(text, "", "", "", "", "", "", "", "")
     return "true"
 
 @app.route('/updateColour/', methods=['POST'])
