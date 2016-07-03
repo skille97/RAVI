@@ -71,7 +71,7 @@ $(document).ready(function(){
 			var inputElement = $("input.inputField")[0];
 			var id = parseInt($("#" + inputElement.id).parent().attr("id"));
 			ajaxRequest("updateRow",{"id": id, "column":columnId(inputElement.id), "newValue": inputElement.value})
-			$("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"'>" + inputElement.value + "</td>");
+			$("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"' style='background-color: " + oldColour + "'>" + inputElement.value + "</td>");
 			tableEdit = false;
 		}
 	}
@@ -81,6 +81,8 @@ $(document).ready(function(){
 			event.stopPropagation();
 			closeInput();
 			oldVal = $(this).html();
+      oldColour = $(this).css("background-color");
+      console.log($(this).css("background-color"));
 			$(this).replaceWith("<input class='inputField' class='data' id='" + $(this).attr("id") + "' type='text' value='" + $(this).html() + "'></input>");
 			tableEdit = true;
 		}
