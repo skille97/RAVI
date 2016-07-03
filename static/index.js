@@ -1,49 +1,79 @@
 var tableEdit = false;
 var oldVal = "";
 
-$(document).ready(function(){
-	function closeInput () {
-		console.log($('input.inputField'));
-		if($('input.inputField').length > 0){
-			var inputElement = $("input.inputField")[0];
-			var colVal = false;
-			var colId = "";
-			for (var i = 0; i < inputElement.id.length; i++) {
-				if (inputElement.id[i] === "_") {
-					if (!colVal) {
-						colVal = true;
-					} else {
-						colVal = false;
-					}
-				}
-				if (colVal) {
-					if (inputElement.id[i] !== "_") {
-						colId = colId + String(inputElement.id[i]);
-					}
-				}
-			}
-			var id = parseInt($("#" + inputElement.id).parent().attr("id"));
-			ajaxRequest("updateRow",{"id": id, "column":colId, "newValue": inputElement.value})
-			$("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"'>" + inputElement.value + "</td>");
-			tableEdit = false;
-		}
+//Variable to store the id of the right clicked cell, that is needed in the rightclick menu(See rightClick.js)
+var rightClickedCell = "";
+
+//Functions to be defined outside of document.ready
+function ajaxRequest (aUrl, aData) {
+  $.ajax({
+    type: 'POST',
+    // Provide correct Content-Type, so that Flask will know how to process it.
+    contentType: 'application/json',
+    // Encode your data as JSON.
+    data: JSON.stringify(aData),
+    // This is the type of data you're expecting back from the server.
+    dataType: 'json',
+    url: '/' + aUrl + '/',
+    success: function (e) {
+      updateStuff();
+    }
+  });
+}
+
+function updateStuff(){
+	if (!tableEdit) $("#table").load(document.URL + ' #table', function(){
+    fixWhiteColumn();
+  }); //location.reload();
+}
+
+function hideRow(row) {
+  ajaxRequest("hideRow", {"id": row});
+	updateStuff();
 	}
 
-	function ajaxRequest (aUrl, aData) {
-		$.ajax({
-			type: 'POST',
-			// Provide correct Content-Type, so that Flask will know how to process it.
-			contentType: 'application/json',
-			// Encode your data as JSON.
-			data: JSON.stringify(aData),
-			// This is the type of data you're expecting back from the server.
-			dataType: 'json',
-			url: '/' + aUrl + '/',
-			success: function (e) {
-				console.log(e);
-				updateStuff();
-			}
-		});
+function columnId(cell){
+  var colVal = false;
+  var colId = "";
+  for (var i = 0; i < cell.length; i++) {
+    if (cell[i] === "_") {
+      if (!colVal) {
+        colVal = true;
+      } else {
+        colVal = false;
+      }
+    }
+    if (colVal) {
+      if (cell[i] !== "_") {
+        colId = colId + String(cell[i]);
+      }
+    }
+  }
+  return colId;
+}
+
+	setInterval(function(){
+		updateStuff();
+	}, 5000);
+
+function fixWhiteColumn(){
+  $(".data").each(function(){
+    if(columnId($(this).attr("id")) == 0){
+      $(this).css("background-color","#ffffff")
+    }
+  });
+}
+
+//Function will run when all the HTML has been loaded.
+$(document).ready(function(){
+	function closeInput () {
+		if($('input.inputField').length > 0){
+			var inputElement = $("input.inputField")[0];
+			var id = parseInt($("#" + inputElement.id).parent().attr("id"));
+			ajaxRequest("updateRow",{"id": id, "column":columnId(inputElement.id), "newValue": inputElement.value})
+			$("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"' style='background-color: " + oldColour + "'>" + inputElement.value + "</td>");
+			tableEdit = false;
+		}
 	}
 
 	$(document).on("click", ".data", function(event){
@@ -51,10 +81,22 @@ $(document).ready(function(){
 			event.stopPropagation();
 			closeInput();
 			oldVal = $(this).html();
+      oldColour = $(this).css("background-color");
+      console.log($(this).css("background-color"));
 			$(this).replaceWith("<input class='inputField' class='data' id='" + $(this).attr("id") + "' type='text' value='" + $(this).html() + "'></input>");
 			tableEdit = true;
 		}
 	});
+
+  $(document).on("contextmenu", ".data", function(event){
+    rightClickedCell = $(this).attr("id");
+
+  });
+  $(document).on("contextmenu", "body", function(event){
+    if(event.target.className !== "data"){
+      rightClickedCell = "";
+    }
+  });
 
 	$(window).keydown(function(key){
 		if(key.key === "Enter" || key.keyCode === 13){
@@ -88,31 +130,5 @@ $(document).ready(function(){
 			}
 			updateStuff();
 	});
+  fixWhiteColumn();
 });
-
-function updateStuff(){
-	if (!tableEdit) $("#table").load(document.URL + ' #table'); //location.reload();
-}
-
-function hideRow(row) {
-	$.ajax({
-		type: 'POST',
-		// Provide correct Content-Type, so that Flask will know how to process it.
-		contentType: 'application/json',
-		// Encode your data as JSON.
-		data: JSON.stringify({'id': row}),
-		// This is the type of data you're expecting back from the server.
-		dataType: 'json',
-		url: '/hideRow/',
-		success: function (e) {
-			console.log(e);
-
-		}
-	});
-	updateStuff();
-	}
-
-
-	setInterval(function(){
-		updateStuff();
-	}, 5000);
