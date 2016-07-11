@@ -127,4 +127,4 @@ def updateColour():
 if __name__ == "__main__":
     headers = ["id", "name", "data", "stencil", "program", "montage", "delivery", "PCB", "components", "comments"]
     dbInit()
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=False, host="0.0.0.0")
