@@ -108,6 +108,7 @@ def getTasks():
     body = []
     for row in cursor.execute("SELECT * FROM tasks WHERE visible=1 ORDER BY position"):
         body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
+        print (row)
     return body
 
 def getColours():
@@ -118,11 +119,35 @@ def getColours():
         colours.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
     return colours
 
+def getHiddenTasks():
+	db = sqlite3.connect(db_name)
+	cursor = db.cursor()
+	body = []
+	for row in cursor.execute("SELECT * FROM tasks ORDER BY position"):
+		try:
+			body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
+			print (row)
+		except:
+			print("error")
+	return body
+
+def getHiddenColours():
+    db = sqlite3.connect(db_name)
+    cursor = db.cursor()
+    colours = []
+    for row in cursor.execute("SELECT * FROM colours ORDER BY position"):
+        colours.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
+    return colours
+
 @app.route("/")
 def main():
     headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Komplet"]
-    return render_template('index.html', headers=headers, body=getTasks(), colours=getColours())
+    return render_template('index.html', headers=headers, body=getTasks(), colours=getColours(), link="/hidden/")
 
+@app.route("/hidden/")
+def hidden():
+	headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Komplet"]
+	return render_template('index.html', headers=headers, body=getHiddenTasks(), colours=getHiddenColours(), link="/")
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():

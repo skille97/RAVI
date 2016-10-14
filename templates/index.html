@@ -16,7 +16,11 @@
 				<li data-action="yellow" style="color: #ffe600">Gul</li>
 				<li data-action="green" style="color: #63eb05">Grøn</li>
 			</ul>
-			<button id="add">Add row</button>
+			<form action={{link}} style="display:inline">
+    		<button type="submit">Toggle hidden rows</button>
+			</form>
+			<button id="add" style="display:inline">Add row</button>
+			<br></br>
 			<div id="table">
 				<table border="1" cellpadding="5" cellspacing="5">
 					<tr>
