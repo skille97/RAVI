@@ -12,7 +12,9 @@ import shutil
 
 #for tempfiles
 UPLOAD_FOLDER = './upload/'
-
+if not os.path.isdir(UPLOAD_FOLDER):
+	print(" * Could not find " + UPLOAD_FOLDER + ". Making new")
+	os.makedirs(UPLOAD_FOLDER)
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
