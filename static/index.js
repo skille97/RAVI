@@ -28,7 +28,9 @@ function updateStuff(){
 }
 
 function hideRow(row) {
-  ajaxRequest("hideRow", {"id": row});
+	var visible = 1-$("#hide" + row + ":checked").length;
+	console.log($("#hide" + row + ":checked").length);
+  ajaxRequest("hideRow", {"id": row, "visible" : visible});
 	updateStuff();
 	}
 

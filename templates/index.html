@@ -34,7 +34,11 @@
 						{% for rowrow in row %}
 						<td class="data" id="Cell_{{loop.index0}}_{{row[0]}}" style="background-color: {{colours[y][loop.index0]}}">{{ rowrow }}</td>
 						{% endfor %}
-						<td><input type="checkbox" onclick="hideRow({{row[0]}})"></input></td>
+						{% if hiddenStates[row[0]-1] == 0 %}
+						<td><input type="checkbox" onclick="hideRow({{row[0]}})" id="hide{{row[0]}}" checked></input></td>
+						{% else %}
+						<td><input type="checkbox" onclick="hideRow({{row[0]}})" id="hide{{row[0]}}"></input></td>
+						{% endif %}
 					</tr>
 					{% endfor %}
 				</table>

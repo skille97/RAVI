@@ -93,11 +93,11 @@ def updateRow():
 @app.route('/hideRow/', methods=['POST'])
 def hideRow():
     row = request.json['id']
-    updateCell(row, "visible", 0)
+    updateCell(row, "visible", request.json['visible'])
     #Updates the colour database
     db = sqlite3.connect(db_name)
     c = db.cursor()
-    c.execute("UPDATE colours SET " + "visible" + " = ? WHERE id=?", ["0", row])
+    c.execute("UPDATE colours SET " + "visible" + " = ? WHERE id=?", [request.json['visible'], row])
     db.commit()
     db.close()
     return "Row number" + str(row) + " hidden"
@@ -123,13 +123,16 @@ def getHiddenTasks():
 	db = sqlite3.connect(db_name)
 	cursor = db.cursor()
 	body = []
+	hiddenStates = []
 	for row in cursor.execute("SELECT * FROM tasks ORDER BY position"):
 		try:
 			body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
+			hiddenStates.append(row[11])
 			print (row)
 		except:
 			print("error")
-	return body
+	return [body, hiddenStates]
+
 
 def getHiddenColours():
     db = sqlite3.connect(db_name)
@@ -142,12 +145,13 @@ def getHiddenColours():
 @app.route("/")
 def main():
     headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Komplet"]
-    return render_template('index.html', headers=headers, body=getTasks(), colours=getColours(), link="/hidden/")
+    return render_template('index.html', headers=headers, body=getTasks(), colours=getColours(), hiddenStates=[], link="/hidden/")
 
 @app.route("/hidden/")
 def hidden():
+	tasks = getHiddenTasks()
 	headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Komplet"]
-	return render_template('index.html', headers=headers, body=getHiddenTasks(), colours=getHiddenColours(), link="/")
+	return render_template('index.html', headers=headers, body=tasks[0], colours=getHiddenColours(), hiddenStates=tasks[1],  link="/")
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
