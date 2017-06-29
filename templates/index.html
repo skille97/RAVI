@@ -17,9 +17,13 @@
 				<li data-action="green" style="color: #63eb05">Grøn</li>
 			</ul>
 			<form action={{link}} style="display:inline">
-    		<button type="submit">Toggle hidden rows</button>
+				{% if not isHidden%}
+    		<button type="submit" style="color:green;">Vis komplette emner</button>
+				{% else %}
+				<button type="submit" style="color:red;">Skjul komplette emner</button>
+				{% endif %}
 			</form>
-			<button id="add" style="display:inline">Add row</button>
+			<button id="add" style="display:inline">Tilføj emne</button>
 			<br></br>
 			<div id="table">
 				<table border="1" cellpadding="5" cellspacing="5">

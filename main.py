@@ -86,13 +86,14 @@ def updateCell(row, column, newValue):
 
 @app.route('/updateRow/', methods=['POST'])
 def updateRow():
-    row = request.json['id']
-    column = request.json['column']
-    newValue = request.json['newValue']
-    column = headers[int(column)]
-    updateCell(row, column, newValue)
-    # retrnes a sringe ingore
-    return "lol"
+	row = request.json['id']
+	column = request.json['column']
+	newValue = request.json['newValue']
+	column = headers[int(column)]
+	print(str(row) + " " + column + " " + newValue)
+	updateCell(row, column, newValue)
+	# retrnes a sringe ingore
+	return "lol"
 
 @app.route('/hideRow/', methods=['POST'])
 def hideRow():
@@ -111,7 +112,7 @@ def getTasks():
     cursor = db.cursor()
     body = []
     for row in cursor.execute("SELECT * FROM tasks WHERE visible=1 ORDER BY position"):
-        body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[11], row[12]])
+        body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
         print (row)
     return body
 
@@ -120,7 +121,7 @@ def getColours():
     cursor = db.cursor()
     colours = []
     for row in cursor.execute("SELECT * FROM colours WHERE visible=1 ORDER BY position"):
-        colours.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[11], row[12]])
+        colours.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
     return colours
 
 def getHiddenTasks():
@@ -130,7 +131,7 @@ def getHiddenTasks():
 	hiddenStates = []
 	for row in cursor.execute("SELECT * FROM tasks ORDER BY position"):
 		try:
-			body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[11], row[12]])
+			body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
 			hiddenStates.append(row[13])
 			print (row)
 		except:
@@ -143,19 +144,19 @@ def getHiddenColours():
     cursor = db.cursor()
     colours = []
     for row in cursor.execute("SELECT * FROM colours ORDER BY position"):
-        colours.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[11], row[12]])
+        colours.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
     return colours
 
 @app.route("/")
 def main():
-    headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Kunde", "Antal", "Komplet"]
-    return render_template('index.html', headers=headers, body=getTasks(), colours=getColours(), hiddenStates=[], link="/hidden/")
+    headers = ["ID", "Kunde", "Projekt", "Antal", "Data", "Stencil", "Program", "Montage", "Levering", "PCB", "Components", "Kommentarer", "Komplet"]
+    return render_template('index.html', headers=headers, body=getTasks(), colours=getColours(), hiddenStates=[], link="/hidden/", isHidden=False)
 
 @app.route("/hidden/")
 def hidden():
 	tasks = getHiddenTasks()
-	headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Kunde", "Antal", "Komplet"]
-	return render_template('index.html', headers=headers, body=tasks[0], colours=getHiddenColours(), hiddenStates=tasks[1],  link="/")
+	headers = ["ID", "Kunde", "Projekt", "Antal", "Data", "Stencil", "Program", "Montage", "Levering", "PCB", "Components", "Kommentarer", "Komplet"]
+	return render_template('index.html', headers=headers, body=tasks[0], colours=getHiddenColours(), hiddenStates=tasks[1],  link="/", isHidden=True)
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
@@ -210,6 +211,6 @@ def exit():
 
 
 if __name__ == "__main__":
-    headers = ["id", "name", "data", "stencil", "program", "montage", "delivery", "PCB", "components", "comments", "customer", "count"]
+    headers = ["id", "customer", "name", "count", "data", "stencil", "program", "montage", "delivery", "PCB", "components", "comments"]
     dbInit()
     app.run(debug=True, host="0.0.0.0")
