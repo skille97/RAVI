@@ -91,7 +91,6 @@ def updateRow():
 	column = request.json['column']
 	newValue = request.json['newValue']
 	column = headers[int(column)]
-	print(str(row) + " " + column + " " + newValue)
 	updateCell(row, column, newValue)
 	# retrnes a sringe ingore
 	return "lol"
@@ -114,7 +113,7 @@ def getTasks():
     body = []
     for row in cursor.execute("SELECT * FROM tasks WHERE visible=1 ORDER BY position"):
         body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
-        print (row)
+
     return body
 
 def getColours():
@@ -134,7 +133,6 @@ def getHiddenTasks():
 		try:
 			body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
 			hiddenStates.append(row[13])
-			print (row)
 		except:
 			print("error")
 	return [body, hiddenStates]
@@ -185,8 +183,6 @@ def toCsv():
 	for row in c.execute("SELECT * FROM tasks ORDER BY position"):
 		try:
 			body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[13]])
-
-			print (row)
 		except:
 			print("error")
 	with open("upload/out.csv", "w", newline='') as csv_file:              # Python 2 version
@@ -231,4 +227,4 @@ def exit():
 if __name__ == "__main__":
     headers = ["id", "customer", "name", "count", "data", "stencil", "program", "montage", "delivery", "PCB", "components", "comments"]
     dbInit()
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=False, host="0.0.0.0")
