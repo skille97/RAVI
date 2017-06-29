@@ -40,6 +40,8 @@ def dbInit():
                 comments TEXT,
                 components TEXT,
                 PCB TEXT,
+				customer TEXT,
+				count TEXT,
                 visible INTEGER
                 )
                """)
@@ -55,18 +57,20 @@ def dbInit():
                 comments TEXT,
                 components TEXT,
                 PCB TEXT,
+				customer TEXT,
+				count TEXT,
                 visible INTEGER
                 )
                """)
     db.close()
 
 #Add entry with the name, comments, components and PCB as values
-def addEntry(name, data, stencil, program, montage, delivery, comments, components, PCB):
+def addEntry(name, data, stencil, program, montage, delivery, comments, components, PCB, customer, count):
     db = sqlite3.connect(db_name)
     c = db.cursor()
     #Hold on to your butts, this is a long one.
-    c.execute("INSERT INTO tasks (position, name, data, stencil, program, montage, delivery, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM tasks), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [name, data, stencil, program, montage, delivery, comments, components, PCB, 1])
-    c.execute("INSERT INTO colours (position, name, comments, components, PCB, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM colours), ' ', ' ', ' ', ' ', 1)")
+    c.execute("INSERT INTO tasks (position, name, data, stencil, program, montage, delivery, comments, components, PCB, customer, count, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM tasks), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [name, data, stencil, program, montage, delivery, comments, components, PCB,customer, count, 1])
+    c.execute("INSERT INTO colours (position, name, comments, components, PCB,customer, count, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM colours), ' ', ' ', ' ', ' ', ' ', ' ', 1)")
     db.commit()
     db.close()
 
@@ -107,7 +111,7 @@ def getTasks():
     cursor = db.cursor()
     body = []
     for row in cursor.execute("SELECT * FROM tasks WHERE visible=1 ORDER BY position"):
-        body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
+        body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[11], row[12]])
         print (row)
     return body
 
@@ -116,7 +120,7 @@ def getColours():
     cursor = db.cursor()
     colours = []
     for row in cursor.execute("SELECT * FROM colours WHERE visible=1 ORDER BY position"):
-        colours.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
+        colours.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[11], row[12]])
     return colours
 
 def getHiddenTasks():
@@ -126,8 +130,8 @@ def getHiddenTasks():
 	hiddenStates = []
 	for row in cursor.execute("SELECT * FROM tasks ORDER BY position"):
 		try:
-			body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
-			hiddenStates.append(row[11])
+			body.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[11], row[12]])
+			hiddenStates.append(row[13])
 			print (row)
 		except:
 			print("error")
@@ -139,24 +143,24 @@ def getHiddenColours():
     cursor = db.cursor()
     colours = []
     for row in cursor.execute("SELECT * FROM colours ORDER BY position"):
-        colours.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
+        colours.append([row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[11], row[12]])
     return colours
 
 @app.route("/")
 def main():
-    headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Komplet"]
+    headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Kunde", "Antal", "Komplet"]
     return render_template('index.html', headers=headers, body=getTasks(), colours=getColours(), hiddenStates=[], link="/hidden/")
 
 @app.route("/hidden/")
 def hidden():
 	tasks = getHiddenTasks()
-	headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Komplet"]
+	headers = ["ID", "Navn", "Data", "Stencil", "Program", "Montage", "Delivery", "PCB", "Components", "Kommentarer", "Kunde", "Antal", "Komplet"]
 	return render_template('index.html', headers=headers, body=tasks[0], colours=getHiddenColours(), hiddenStates=tasks[1],  link="/")
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
     text = request.json['text']
-    addEntry(text, "", "", "", "", "", "", "", "")
+    addEntry(text, "", "", "", "", "", "", "", "", "", "")
     return "true"
 
 @app.route('/updateColour/', methods=['POST'])
@@ -206,6 +210,6 @@ def exit():
 
 
 if __name__ == "__main__":
-    headers = ["id", "name", "data", "stencil", "program", "montage", "delivery", "PCB", "components", "comments"]
+    headers = ["id", "name", "data", "stencil", "program", "montage", "delivery", "PCB", "components", "comments", "customer", "count"]
     dbInit()
     app.run(debug=True, host="0.0.0.0")
