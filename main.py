@@ -3,6 +3,7 @@ from flask import *
 import sqlite3
 import re
 import atexit
+import csv
 
 #BOM stuff
 import os
@@ -175,7 +176,24 @@ def updateColour():
     return "true"
 
 
+@app.route('/csv')
+def toCsv():
+	headers = ["ID", "Kunde", "Projekt", "Antal", "Data", "Stencil", "Program", "Montage", "Levering", "PCB", "Components", "Kommentarer", "Komplet"]
+	db = sqlite3.connect(db_name)
+	c = db.cursor()
+	body = []
+	for row in c.execute("SELECT * FROM tasks ORDER BY position"):
+		try:
+			body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[13]])
 
+			print (row)
+		except:
+			print("error")
+	with open("upload/out.csv", "w", newline='') as csv_file:              # Python 2 version
+		csv_writer = csv.writer(csv_file)
+		csv_writer.writerow(headers) # write headers
+		csv_writer.writerows(body)
+	return send_file("upload/out.csv", as_attachment=True)
 
 @app.route('/bom/', methods=['GET', 'POST'])
 def upload_file():
