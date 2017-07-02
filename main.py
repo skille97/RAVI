@@ -11,6 +11,9 @@ from werkzeug.utils import secure_filename
 from BOM.bom import conveter
 import shutil
 
+#Define working directory. On raspberry pi production.
+#os.chdir("/home/pi/RAVI")
+
 #for tempfiles
 UPLOAD_FOLDER = './upload/'
 if not os.path.isdir(UPLOAD_FOLDER):
@@ -26,52 +29,60 @@ db_name = "RAVI.db"
 def page_not_found(e):
     return render_template('404.html'), 404
 
+#Header configuration start
+#Database headers without primary headers; id, position, name and visible. Order is not important.
+#                    3        4          5          6           7           8            9         10       11         12
+databaseHeader = ["data", "stencil", "program", "montage", "delivery", "comments", "components", "PCB", "customer", "count"] #Changing this requires a new database
+
+#Order and names the headers on website should have, order is important. Note that id, position, name and visible should be present here.
+displayHeaders = ["ID", "Kunde", "Projekt", "Antal", "Data", "Stencil", "Program", "Montage", "Levering", "PCB", "Komponenter", "Kommentarer", "Komplet"]
+
+#Order the different data should be displayed where number represents number in databaseHeaderWithIPNV. Should corrospond to displayHea
+order = [0] + [11, 2, 12, 3, 4, 5, 6, 7, 10, 9, 8] #Komplet vil altid være sidst og skal ikke skrives med. Id skal være i starten og må derfor ikke flyttes
+
+#Header confiduration end
+
+databaseHeaderWithIPNV = ["id", "position", "name"] + databaseHeader + ["visible"]
+databaseHeaderOrder = []
+for i in order:
+	databaseHeaderOrder.append(databaseHeaderWithIPNV[i])
+
+
+def getDisplayOrder(row):
+	#Order the different data should be displayed where number represents number in databaseHeader. Should corrospond to displayHeaders
+	returnList = []
+	for i in order:
+		returnList.append(row[i])
+	return returnList
+
+
+def insertDBheader(DBheaders):
+	text = ""
+	for header in DBheaders:
+		text = text + header + " TEXT, "
+	return text
+
+def makeExecuteSpaces(amount, string):
+	text = ""
+	for i in range(0, amount):
+		text = text + ", " + string
+	return text
+
 #TODO: Database versioning
 def dbInit():
-    db = sqlite3.connect(db_name)
-    db.execute("""CREATE TABLE IF NOT EXISTS tasks (
-                id INTEGER PRIMARY KEY NOT NULL,
-                position INTEGER NOT NULL,
-                name TEXT,
-                data TEXT,
-                stencil TEXT,
-                program TEXT,
-                montage TEXT,
-                delivery TEXT,
-                comments TEXT,
-                components TEXT,
-                PCB TEXT,
-				customer TEXT,
-				count TEXT,
-                visible INTEGER
-                )
-               """)
-    db.execute("""CREATE TABLE IF NOT EXISTS colours (
-                id INTEGER PRIMARY KEY NOT NULL,
-                position INTEGER NOT NULL,
-                name TEXT,
-                data TEXT,
-                stencil TEXT,
-                program TEXT,
-                montage TEXT,
-                delivery TEXT,
-                comments TEXT,
-                components TEXT,
-                PCB TEXT,
-				customer TEXT,
-				count TEXT,
-                visible INTEGER
-                )
-               """)
-    db.close()
+	db = sqlite3.connect(db_name)
+	db.execute("CREATE TABLE IF NOT EXISTS tasks ( id INTEGER PRIMARY KEY NOT NULL, position INTEGER NOT NULL, name TEXT, " + insertDBheader(databaseHeader) + " visible INTEGER)")
+	db.execute("CREATE TABLE IF NOT EXISTS colours ( id INTEGER PRIMARY KEY NOT NULL, position INTEGER NOT NULL, name TEXT, " + insertDBheader(databaseHeader) + " visible INTEGER)")
+
+	db.close()
 
 #Add entry with the name, comments, components and PCB as values
-def addEntry(name, data, stencil, program, montage, delivery, comments, components, PCB, customer, count):
+def addEntry(name):
     db = sqlite3.connect(db_name)
     c = db.cursor()
     #Hold on to your butts, this is a long one.
-    c.execute("INSERT INTO tasks (position, name, data, stencil, program, montage, delivery, comments, components, PCB, customer, count, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM tasks), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [name, data, stencil, program, montage, delivery, comments, components, PCB,customer, count, 1])
-    c.execute("INSERT INTO colours (position, name, comments, components, PCB,customer, count, visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM colours), ' ', ' ', ' ', ' ', ' ', ' ', 1)")
+    c.execute("INSERT INTO tasks (position, name, " + ', '.join(databaseHeader) + ", visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM tasks), ?" + makeExecuteSpaces(len(databaseHeader), "''") + ", 1)", [name])
+    c.execute("INSERT INTO colours (position, name, " + ', '.join(databaseHeader) + ", visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM colours)" + makeExecuteSpaces(len(databaseHeader) + 1, "' '") + ", 1)")
     db.commit()
     db.close()
 
@@ -90,7 +101,7 @@ def updateRow():
 	row = request.json['id']
 	column = request.json['column']
 	newValue = request.json['newValue']
-	column = headers[int(column)]
+	column = databaseHeaderOrder[int(column)]
 	updateCell(row, column, newValue)
 	# retrnes a sringe ingore
 	return "lol"
@@ -112,7 +123,7 @@ def getTasks():
     cursor = db.cursor()
     body = []
     for row in cursor.execute("SELECT * FROM tasks WHERE visible=1 ORDER BY position"):
-        body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
+        body.append(getDisplayOrder(row))
 
     return body
 
@@ -121,7 +132,7 @@ def getColours():
     cursor = db.cursor()
     colours = []
     for row in cursor.execute("SELECT * FROM colours WHERE visible=1 ORDER BY position"):
-        colours.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
+        colours.append(getDisplayOrder(row))
     return colours
 
 def getHiddenTasks():
@@ -131,10 +142,10 @@ def getHiddenTasks():
 	hiddenStates = []
 	for row in cursor.execute("SELECT * FROM tasks ORDER BY position"):
 		try:
-			body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
-			hiddenStates.append(row[13])
+			body.append(getDisplayOrder(row))
+			hiddenStates.append(row[len(databaseHeaderWithIPNV)-1])
 		except:
-			print("error")
+			print("error in getting hidden tasks")
 	return [body, hiddenStates]
 
 
@@ -143,29 +154,27 @@ def getHiddenColours():
     cursor = db.cursor()
     colours = []
     for row in cursor.execute("SELECT * FROM colours ORDER BY position"):
-        colours.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8]])
+        colours.append(getDisplayOrder(row))
     return colours
 
 @app.route("/")
 def main():
-    headers = ["ID", "Kunde", "Projekt", "Antal", "Data", "Stencil", "Program", "Montage", "Levering", "PCB", "Components", "Kommentarer", "Komplet"]
-    return render_template('index.html', headers=headers, body=getTasks(), colours=getColours(), hiddenStates=[], link="/hidden/", isHidden=False)
+    return render_template('index.html', headers=displayHeaders, body=getTasks(), colours=getColours(), hiddenStates=[], link="/hidden/", isHidden=False)
 
 @app.route("/hidden/")
 def hidden():
 	tasks = getHiddenTasks()
-	headers = ["ID", "Kunde", "Projekt", "Antal", "Data", "Stencil", "Program", "Montage", "Levering", "PCB", "Components", "Kommentarer", "Komplet"]
-	return render_template('index.html', headers=headers, body=tasks[0], colours=getHiddenColours(), hiddenStates=tasks[1],  link="/", isHidden=True)
+	return render_template('index.html', headers=displayHeaders, body=tasks[0], colours=getHiddenColours(), hiddenStates=tasks[1],  link="/", isHidden=True)
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
     text = request.json['text']
-    addEntry(text, "", "", "", "", "", "", "", "", "", "")
+    addEntry(text)
     return "true"
 
 @app.route('/updateColour/', methods=['POST'])
 def updateColour():
-    column = headers[int(request.json['column'])]
+    column = databaseHeaderOrder[int(request.json['column'])]
     db = sqlite3.connect(db_name)
     c = db.cursor()
     c.execute("UPDATE colours SET " + column + " = ? WHERE id=?", [request.json['colour'], str(request.json['row'])])
@@ -176,7 +185,6 @@ def updateColour():
 
 @app.route('/csv')
 def toCsv():
-	headers = ["ID", "Kunde", "Projekt", "Antal", "Data", "Stencil", "Program", "Montage", "Levering", "PCB", "Components", "Kommentarer", "Komplet"]
 	db = sqlite3.connect(db_name)
 	c = db.cursor()
 	body = []
@@ -184,10 +192,10 @@ def toCsv():
 		try:
 			body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[13]])
 		except:
-			print("error")
+			print("error in converting to csv")
 	with open("upload/out.csv", "w", newline='') as csv_file:              # Python 2 version
 		csv_writer = csv.writer(csv_file)
-		csv_writer.writerow(headers) # write headers
+		csv_writer.writerow(displayHeaders) # write headers
 		csv_writer.writerows(body)
 	return send_file("upload/out.csv", as_attachment=True)
 
@@ -215,16 +223,8 @@ def upload_file():
     return render_template('bom.html')
 
 
-#Remove tempfiles on exit
-@atexit.register
-def exit():
-    print("Removing temp files")
-    shutil.rmtree(UPLOAD_FOLDER)
-    os.makedirs(UPLOAD_FOLDER)
-
 
 
 if __name__ == "__main__":
-    headers = ["id", "customer", "name", "count", "data", "stencil", "program", "montage", "delivery", "PCB", "components", "comments"]
     dbInit()
     app.run(debug=False, host="0.0.0.0")
