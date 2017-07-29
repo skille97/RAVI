@@ -4,15 +4,21 @@ import sqlite3
 import re
 import atexit
 import csv
+import sys, os
+
+
+#Define working directory. Defualts to current
+if len(sys.argv) > 1:
+    os.chdir(sys.argv[1])
+    print("Working directory set to " + os.getcwd())
+else:
+    print("No working directory specified, using current.")
+
 
 #BOM stuff
-import os
 from werkzeug.utils import secure_filename
 from BOM.bom import conveter
 import shutil
-
-#Define working directory. On raspberry pi production.
-#os.chdir("/home/pi/RAVI")
 
 #for tempfiles
 UPLOAD_FOLDER = './upload/'
@@ -20,7 +26,7 @@ if not os.path.isdir(UPLOAD_FOLDER):
 	print(" * Could not find " + UPLOAD_FOLDER + ". Making new")
 	os.makedirs(UPLOAD_FOLDER)
 
-app = Flask(__name__)
+app = Flask(__name__, root_path=os.getcwd())
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 db_name = "RAVI.db"
@@ -227,4 +233,5 @@ def upload_file():
 
 if __name__ == "__main__":
     dbInit()
+    rootPath = os.getcwd()
     app.run(debug=False, host="0.0.0.0")
