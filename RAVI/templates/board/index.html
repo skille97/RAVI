@@ -1,0 +1,61 @@
+<html>
+	<head>
+		{% load static %}
+		<title>RAVI</title>
+		<link rel="icon" href="http://ravi.dk/onewebstatic/368cade015-Ravi-Electronics_logo_blaa.png"/>
+		<link rel="stylesheet" type="text/css" href="{% static "index.css" %} ">
+		<script src="{% static "jquery-3.0.0.min.js" %}"></script>
+		<script src="{% static "index.js" %}"></script>
+
+
+	</head>
+	<body>
+		<center>
+			<ul class='custom-menu'>
+				<li data-action="white" style="color: #000000">Hvid</li>
+				<li data-action="red" style="color: #ff0000">Rød</li>
+				<li data-action="yellow" style="color: #ffe600">Gul</li>
+				<li data-action="green" style="color: #63eb05">Grøn</li>
+			</ul>
+			<form action={{link}} style="display:inline">
+				{% if not isHidden%}
+    		<button type="submit" style="color:green;">Vis komplette emner</button>
+				{% else %}
+				<button type="submit" style="color:red;">Skjul komplette emner</button>
+				{% endif %}
+
+			</form>
+			<button id="add" style="display:inline">Tilføj emne</button>
+			<a href="/csv">Download som CSV</a>
+			<br></br>
+			<div id="table">
+				<table border="1" cellpadding="5" cellspacing="5">
+					<tr>
+						{% for row in headers %}
+						<th>{{ row }}</th>
+						{% endfor %}
+					</tr>
+					{% for row in body %}
+					{% with "y" as forloop.counter0%}
+					<tr id="{{row.0}}">
+						{% for rowrow in row %}
+						{% with "x" as forloop.counter0 %}
+						<td class="data" id="Cell_{{x}}_{{row.0}}" style="background-color: {{colours.y.x}}">{{ rowrow }}</td>
+						{% endwith %}
+						{% endfor %}
+						{% with "index" as row.0 %}
+						{{ index|add:"-1" }}
+						{% if hiddenStates.index == 0 %}
+						<td><input type="checkbox" onclick="hideRow({{row.0}})" id="hide{{row.0}}" checked></input></td>
+						{% else %}
+						<td><input type="checkbox" onclick="hideRow({{row.0}})" id="hide{{row.0}}"></input></td>
+						{% endif %}
+						{% endwith %}
+					</tr>
+					{% endwith %}
+					{% endfor %}
+				</table>
+		</center>
+		<script src="{% static 'rightClick.js'%}"></script>
+		<body>
+</html>
