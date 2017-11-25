@@ -123,6 +123,7 @@ $(document).ready(function(){
         if($('input.inputField').length > 0){
             var inputElement = $("input.inputField")[0];
             var id = parseInt($("#" + inputElement.id).parent().attr("id"));
+
             ajaxRequest("updateRow",{"id": id, "column":columnId(inputElement.id), "newValue": inputElement.value})
             $("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"' style='background-color: " + oldColour + "'>" + inputElement.value + "</td>");
             tableEdit = false;

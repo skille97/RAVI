@@ -41,8 +41,8 @@
 					{% with "y" as forloop.counter0%}
 					<tr id="{{row.0}}">
 						{% for rowrow in row %}
-						{% with "x" as forloop.counter0 %}
-						<td class="data" id="Cell_{{x}}_{{row.0}}" style="background-color: {{colours.y.x}}">{{ rowrow }}</td>
+						{% with x=forloop.counter0 %}
+						<td class="data" id="Cell_{{ forloop.counter0 }}_{{row.0}}" style="background-color: {{colours.y.x }}">{{ rowrow }}</td>
 						{% endwith %}
 						{% endfor %}
 						{% with "index" as row.0 %}
