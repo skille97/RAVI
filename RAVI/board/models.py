@@ -50,6 +50,6 @@ class Colors(models.Model):
 
 
 
-ORDER = ["id","kunde", "name", "antal", "data"]
+ORDER = ["id","kunde", "name", "antal", "data", "stencil", "program", "montage", "PCB", "komponenter", "kommentar"]
 
 

@@ -8,13 +8,15 @@ from django.conf import settings
 
 import json
 
+
+
+
 def index(request, hidden=False):
 
     items = Item.objects.filter(komplet= hidden).order_by("id")
 
     body = []
     colours = []
-    hiddenStates = []
     link = "/"
     if not hidden:
         link = link + "hidden"
@@ -30,16 +32,14 @@ def index(request, hidden=False):
                 itemColours.append(getattr(item, name))
             elif name is not "komplet":
                 itemColours.append(getattr(colorModel, name))        
-        body.append(itemBody)
+        body.append([itemBody, str(item.komplet)])
         colours.append(itemColours)
-        if(hidden):
-            hiddenStates.append(item.komplet)
+
 
     args = {
         "headers" : ORDER,
         "body" : body,
         "colours": colours,
-        "hiddenStates" : hiddenStates,
         "link" : link,
         "isHidden" : hidden,
     }
@@ -59,7 +59,7 @@ def updateRows(request):
     newValue = data["newValue"]
 
 
-
+    print("Updating")
     print(row)
     print(ORDER[column])
     print(newValue)
@@ -73,16 +73,18 @@ def updateRows(request):
     return HttpResponse('')
 
 def hideRow(request):
-    row = request.POST.get("id")
-
-    item = Item.objects.get_object_or_404(Item, id=row)
+    data = json.loads(((request.body).decode('utf-8')))
+    print(data["id"])
+    row = data["id"]
+    print("hiding row " + str(row))
+    item = get_object_or_404(Item, id=row)
     item.komplet = not (item.komplet)
     item.save()
     return HttpResponse('')
 
 def addRow(request):
-    print("Hej")
-    name = request.POST.get("text", "test")
+    data = json.loads(((request.body).decode('utf-8')))
+    name = data["text"]
     print(name)
     item = Item(name=name)
     item.save()

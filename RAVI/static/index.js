@@ -82,7 +82,11 @@ function hideRow(row) {
     var visible = 1-$("#hide" + row + ":checked").length;
     console.log($("#hide" + row + ":checked").length);
   ajaxRequest("hideRow", {"id": row, "visible" : visible});
-    updateStuff();
+    //Wait for server to save settings
+    setTimeout(function() {
+        updateStuff();
+    }, 100);
+    
     }
 
 function columnId(cell){
@@ -123,6 +127,8 @@ $(document).ready(function(){
         if($('input.inputField').length > 0){
             var inputElement = $("input.inputField")[0];
             var id = parseInt($("#" + inputElement.id).parent().attr("id"));
+
+            console.log($("#" + inputElement.id).parent());
 
             ajaxRequest("updateRow",{"id": id, "column":columnId(inputElement.id), "newValue": inputElement.value})
             $("#" + inputElement.id).replaceWith("<td class='data' id='" + inputElement.id +"' style='background-color: " + oldColour + "'>" + inputElement.value + "</td>");

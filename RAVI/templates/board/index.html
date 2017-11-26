@@ -38,21 +38,18 @@
 						{% endfor %}
 					</tr>
 					{% for row in body %}
-					{% with "y" as forloop.counter0%}
-					<tr id="{{row.0}}">
-						{% for rowrow in row %}
-						{% with x=forloop.counter0 %}
-						<td class="data" id="Cell_{{ forloop.counter0 }}_{{row.0}}" style="background-color: {{colours.y.x }}">{{ rowrow }}</td>
+					{% with y=forloop.counter0 rowData=row.0 %}
+					<tr id="{{rowData.0}}">
+						{% for rowrow in row.0 %}
+						{% with x=forloop.counter0  %}
+						<td class="data" id="Cell_{{ forloop.counter0 }}_{{rowData.0}}" style="background-color: {{colours.y.x }}">{{ rowrow }}</td>
 						{% endwith %}
 						{% endfor %}
-						{% with "index" as row.0 %}
-						{{ index|add:"-1" }}
-						{% if hiddenStates.index == 0 %}
-						<td><input type="checkbox" onclick="hideRow({{row.0}})" id="hide{{row.0}}" checked></input></td>
+						{% if row.1 == "True" %}
+						<td><input test="{{row.1}}" type="checkbox" onclick="hideRow({{rowData.0}})" id="hide{{forloop.counter0}}" checked ></input></td>
 						{% else %}
-						<td><input type="checkbox" onclick="hideRow({{row.0}})" id="hide{{row.0}}"></input></td>
+						<td><input test="{{row.1}}" type="checkbox" onclick="hideRow({{rowData.0}})" id="hide{{forloop.counter0}}"></input></td>
 						{% endif %}
-						{% endwith %}
 					</tr>
 					{% endwith %}
 					{% endfor %}
