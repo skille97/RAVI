@@ -5,11 +5,11 @@ from django.db import models
         
 class Item(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(default="", max_length=20)
     komplet = models.BooleanField(default=False, verbose_name="Komplet")
+    #Hvis dette navn ændres skal det også ændres i views.py i linje 90. Sååå kun gør det hvis det er nødvendigt
+    projekt = models.CharField(default="", max_length=20)
 
-
-
+    
     kunde = models.CharField(default="", max_length=20)
     antal = models.CharField(default="", max_length=20)
     data = models.CharField(default="", max_length=20)
@@ -25,9 +25,11 @@ class Item(models.Model):
         return str(self.id)
 
 
-class Colors(models.Model):
+class Colours(models.Model):
     itemLinked = models.OneToOneField(Item, on_delete=models.CASCADE, primary_key=True)
 
+
+    projekt = models.CharField(default="", max_length=20)
     kunde = models.CharField(default="", max_length=20)
     antal = models.CharField(default="", max_length=20)
     data = models.CharField(default="", max_length=20)
@@ -50,6 +52,6 @@ class Colors(models.Model):
 
 
 
-ORDER = ["id","kunde", "name", "antal", "data", "stencil", "program", "montage", "PCB", "komponenter", "kommentar"]
+ORDER = ["id","kunde", "projekt", "antal", "data", "stencil", "program", "montage", "PCB", "komponenter", "kommentar"]
 
 

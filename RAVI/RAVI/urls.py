@@ -19,6 +19,8 @@ from django.contrib import admin
 from board import views
 
 urlpatterns = [
+    url(r'^updateColour', views.updateColour),
+    url(r'^csv', views.toCsv),
 	url(r'^updateRow/', views.updateRows),
 	url(r'^addRow/', views.addRow),
 	url(r'^hideRow/', views.hideRow),

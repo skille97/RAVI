@@ -7,4 +7,4 @@ from board.models import *
 
 
 admin.site.register(Item)
-admin.site.register(Colors)
+admin.site.register(Colours)

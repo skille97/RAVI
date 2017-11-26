@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
+import csv
 
 from board.models import *
 from django.conf import settings
@@ -9,37 +10,50 @@ from django.conf import settings
 import json
 
 
+def genValueBody(items, withColour, withKompletStates):
+    #This takes a database query from items and converts it into an array with the following structure.
+    # body[item[value]]
+    # If the two settings are set to true it will return this
+    # body[item[value, colour], komplet]
+    body = []
+
+    for item in items:
+        itemBody = []
+        for name in ORDER:
+            value = getattr(item, name)
+            colour = ""
+            if(withColour):
+                colourModel = item.colours
+                
+                if name not in ["id", "komplet"]:
+                    colour = getattr(colourModel, name) 
+                itemBody.append([value, colour])   
+            else:
+                itemBody.append(value) 
+        if withKompletStates:
+            body.append([itemBody, str(item.komplet)])
+        else:
+            body.append(itemBody)
+
+    return body
 
 
 def index(request, hidden=False):
 
     items = Item.objects.filter(komplet= hidden).order_by("id")
 
-    body = []
-    colours = []
+    body = genValueBody(items, True, True)
     link = "/"
     if not hidden:
         link = link + "hidden"
 
 
-    for item in items:
-        itemBody = []
-        itemColours = []
-        for name in ORDER:
-            itemBody.append(getattr(item, name))
-            colorModel = item.colors
-            if name in ["id", "name"]:
-                itemColours.append(getattr(item, name))
-            elif name is not "komplet":
-                itemColours.append(getattr(colorModel, name))        
-        body.append([itemBody, str(item.komplet)])
-        colours.append(itemColours)
+    
 
 
     args = {
         "headers" : ORDER,
         "body" : body,
-        "colours": colours,
         "link" : link,
         "isHidden" : hidden,
     }
@@ -86,15 +100,50 @@ def addRow(request):
     data = json.loads(((request.body).decode('utf-8')))
     name = data["text"]
     print(name)
-    item = Item(name=name)
+    item = Item(projekt=name)
     item.save()
-    colors = Colors(itemLinked=item)
-    colors.save()
+    colours = Colours(itemLinked=item)
+    colours.save()
 
     return HttpResponse('')
 
 
+def updateColour(request):
+    data = json.loads(((request.body).decode('utf-8')))
 
+
+    row = data["row"]
+    column = ORDER[int(data["column"])]
+    colour = data["colour"]
+
+    print(row)
+    print(column)
+    print(colour)
+
+    item = get_object_or_404(Item, id=row)
+    colourItem = item.colours
+    setattr(colourItem, column, colour)
+    colourItem.save()
+
+    return HttpResponse('')
+
+
+def toCsv(response):
+    items = Item.objects.all().order_by("id")
+
+    body = genValueBody(items, False, True)
+
+    #Tell the browser to be ready for our csv
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+
+    #And write the data
+    csv_writer = csv.writer(response)
+    csv_writer.writerow(ORDER + ["komplet"]) # write headers
+    for row in body:
+        csv_writer.writerow(row[0] + [row[1]])
+
+    return response
 
 
 
