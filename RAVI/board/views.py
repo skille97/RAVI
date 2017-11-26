@@ -135,7 +135,7 @@ def updateColour(request):
     try:
         data = json.loads(((request.body).decode('utf-8')))
         row = data["row"]
-        column = ORDER[int(data["column"])]
+        column = int(data["column"])
         colour = data["colour"]
     except Exception as e:
         print("Tried updating colour with data")
@@ -143,6 +143,7 @@ def updateColour(request):
         print("But encountered an error")
         return HttpResponseBadRequest("Missing data")
 
+    print(column)
     if (column not in range(0, len(ORDER)-1)):
         print("User trying to change column out of range. Aborting")
         return HttpResponseForbidden("Column id out of range")
@@ -152,7 +153,7 @@ def updateColour(request):
 
     item = get_object_or_404(Item, id=row)
     colourItem = item.colours
-    setattr(colourItem, column, colour)
+    setattr(colourItem, ORDER[column], colour)
     colourItem.save()
 
     return HttpResponse('')
