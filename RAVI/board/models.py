@@ -50,8 +50,7 @@ class Colours(models.Model):
 # Note that ID, name must be present. Please use the names present in models.py
 # komplet is added at de end automaticly
 
-
-
-ORDER = ["id","kunde", "projekt", "antal", "data", "stencil", "program", "montage", "PCB", "komponenter", "kommentar"]
+#        |DO NOT CHANGE |  CHANGE THESE
+ORDER =     ["id"]  +     ["kunde", "antal", "data", "stencil", "program", "montage", "PCB", "komponenter", "kommentar"]
 
 

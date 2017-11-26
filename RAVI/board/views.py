@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
+from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 import csv
@@ -39,7 +40,6 @@ def genValueBody(items, withColour, withKompletStates):
 
 
 def index(request, hidden=False):
-
     items = Item.objects.filter(komplet= hidden).order_by("id")
 
     body = genValueBody(items, True, True)
@@ -66,40 +66,63 @@ def hidden(request):
 
 
 def updateRows(request):
-    # Lav sikkersheds check sådan at man ikke kan ændre id.
-    data = json.loads(((request.body).decode('utf-8')))
-    row = data["id"]
-    column = int(data["column"])
-    newValue = data["newValue"]
 
+    # Try parsing
+    try:
+        data = json.loads(((request.body).decode('utf-8')))
+        row = data["id"]
+        column = int(data["column"])
+        newValue = data["newValue"]
+    except Exception as e:
+        print("Tried updating a cell with data")
+        print(request.body)
+        print("But encountered an error")
+        return HttpResponseBadRequest("Missing data")
 
-    print("Updating")
-    print(row)
-    print(ORDER[column])
-    print(newValue)
+    
+    if (column not in range(0, len(ORDER)-1)):
+        print("User trying to change column out of range. Aborting")
+        return HttpResponseForbidden("Column id out of range")
+    elif ORDER[column] in ["id"]:
+        print("User trying to change illegal columns. Aborting")
+        return HttpResponseForbidden("Illegal column")
+
 
     item = get_object_or_404(Item, id=row)
 
-
-
     setattr(item, ORDER[column], newValue)
+
+
+
+
     item.save()
     return HttpResponse('')
 
 def hideRow(request):
-    data = json.loads(((request.body).decode('utf-8')))
-    print(data["id"])
-    row = data["id"]
-    print("hiding row " + str(row))
+    try:
+        data = json.loads(((request.body).decode('utf-8')))
+        row = data["id"]
+    except Exception as e:
+        print("Tried hiding row with data")
+        print(request.body)
+        print("But encountered an error")
+        return HttpResponseBadRequest("Missing data")
+
     item = get_object_or_404(Item, id=row)
     item.komplet = not (item.komplet)
     item.save()
     return HttpResponse('')
 
 def addRow(request):
-    data = json.loads(((request.body).decode('utf-8')))
-    name = data["text"]
-    print(name)
+    try:
+        data = json.loads(((request.body).decode('utf-8')))
+        name = data["text"]
+    except Exception as e:
+        print("Tried adding row with data")
+        print(request.body)
+        print("But encountered an error")
+        return HttpResponseBadRequest("Missing data")
+
     item = Item(projekt=name)
     item.save()
     colours = Colours(itemLinked=item)
@@ -109,16 +132,23 @@ def addRow(request):
 
 
 def updateColour(request):
-    data = json.loads(((request.body).decode('utf-8')))
+    try:
+        data = json.loads(((request.body).decode('utf-8')))
+        row = data["row"]
+        column = ORDER[int(data["column"])]
+        colour = data["colour"]
+    except Exception as e:
+        print("Tried updating colour with data")
+        print(request.body)
+        print("But encountered an error")
+        return HttpResponseBadRequest("Missing data")
 
-
-    row = data["row"]
-    column = ORDER[int(data["column"])]
-    colour = data["colour"]
-
-    print(row)
-    print(column)
-    print(colour)
+    if (column not in range(0, len(ORDER)-1)):
+        print("User trying to change column out of range. Aborting")
+        return HttpResponseForbidden("Column id out of range")
+    elif ORDER[column] in ["id"]:
+        print("User trying to change illegal columns. Aborting")
+        return HttpResponseForbidden("Illegal column")
 
     item = get_object_or_404(Item, id=row)
     colourItem = item.colours
