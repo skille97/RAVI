@@ -19,13 +19,13 @@ from django.contrib import admin
 from board import views
 
 urlpatterns = [
-    url(r'^updateColour', views.updateColour),
-    url(r'^csv', views.toCsv),
-	url(r'^updateRow/', views.updateRows),
-	url(r'^addRow/', views.addRow),
-	url(r'^hideRow/', views.hideRow),
-	url(r'^hidden/', views.hidden),
-	url(r'^$', views.index, name='index'),
+    url(r'^updateColour/', views.updateColour),
+    url(r'^csv/', views.toCsv),
+    url(r'^updateRow/', views.updateRows),
+    url(r'^addRow/', views.addRow),
+    url(r'^hideRow/', views.hideRow),
+    url(r'^hidden/', views.hidden),
+    url(r'^$', views.index, name='index'),
     url(r'^admin/', include(admin.site.urls)),
 
 ]

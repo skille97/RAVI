@@ -113,7 +113,7 @@ def hideRow(request):
     item.save()
     return HttpResponse('')
 
-def addRow(request):
+def addRow(request): 
     try:
         data = json.loads(((request.body).decode('utf-8')))
         name = data["text"]
