@@ -13,6 +13,7 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):
 		rawdata = []
 
+		# Load the csv file
 		csvfile = os.path.abspath(options["file"][0])
 		with open(csvfile, 'r') as csvfile:
 			reader = csv.reader(csvfile)
@@ -20,10 +21,12 @@ class Command(BaseCommand):
 				rawdata.append(row)
 
 
+		# Get the header
 		csvheader = rawdata[0]
 
 		headerConverter = {}
 
+		# Load the convertion data into a dict. The keys represent the headers in the csv file while the values represent those in django
 		convFile = os.path.abspath(options["convFile"][0])
 
 		with open(convFile, 'r') as convFile:
@@ -47,6 +50,7 @@ class Command(BaseCommand):
 					value = dataRow[csvheader.index(column)]
 
 					print("    " + convertedHeader + ": " + value)
+					# The last column is the komplet value and is a bool as a string, thats why we should convert it. I used in because everything else diden't work
 					if convertedHeader is not headerConverter[csvheader[len(csvheader)-1]]:
 						setattr(item, convertedHeader, value)
 					else:
