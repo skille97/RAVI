@@ -7,18 +7,18 @@ class Item(models.Model):
     id = models.AutoField(primary_key=True)
     komplet = models.BooleanField(default=False, verbose_name="Komplet")
     #Hvis dette navn ændres skal det også ændres i views.py i linje 90. Sååå kun gør det hvis det er nødvendigt
-    projekt = models.CharField(default="", max_length=20)
+    projekt = models.CharField(default="", max_length=20, verbose_name="Projekt")
 
     
-    kunde = models.CharField(default="", max_length=20)
-    antal = models.CharField(default="", max_length=20)
-    data = models.CharField(default="", max_length=20)
-    stencil = models.CharField(default="", max_length=20)
-    program = models.CharField(default="", max_length=20)
-    montage = models.CharField(default="", max_length=20)
-    PCB = models.CharField(default="", max_length=20)
-    komponenter = models.CharField(default="", max_length=20)
-    kommentar = models.CharField(default="", max_length=20)
+    kunde = models.CharField(default="", max_length=20, verbose_name="Kunde")
+    antal = models.CharField(default="", max_length=20, verbose_name="Antal")
+    data = models.CharField(default="", max_length=20, verbose_name="Data")
+    stencil = models.CharField(default="", max_length=20, verbose_name="Stencil")
+    program = models.CharField(default="", max_length=20, verbose_name="Program")
+    montage = models.CharField(default="", max_length=20, verbose_name="Montage")
+    PCB = models.CharField(default="", max_length=20, verbose_name="PCB")
+    komponenter = models.CharField(default="", max_length=20, verbose_name="Komponeter")
+    kommentar = models.CharField(default="", max_length=20, verbose_name="Kommentar")
 
     
     def __str__(self):
@@ -51,6 +51,6 @@ class Colours(models.Model):
 # komplet is added at de end automaticly
 
 #        |DO NOT CHANGE |  CHANGE THESE
-ORDER =     ["id"]  +     ["kunde", "antal", "data", "stencil", "program", "montage", "PCB", "komponenter", "kommentar"]
+ORDER =     ["id"]  +     ["kunde", "projekt", "antal", "data", "stencil", "program", "montage", "PCB", "komponenter", "kommentar"]
 
 

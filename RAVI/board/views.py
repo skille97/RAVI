@@ -38,6 +38,17 @@ def genValueBody(items, withColour, withKompletStates):
 
     return body
 
+def genHeader(verbose_names, order):
+    header = []
+    for i in order:
+        if verbose_names:
+            name = Item._meta.get_field(i).verbose_name
+        else:
+            name = i
+        header.append(name)
+    return header
+
+
 
 def index(request, hidden=False):
     items = Item.objects.filter(komplet= hidden).order_by("id")
@@ -52,7 +63,7 @@ def index(request, hidden=False):
 
 
     args = {
-        "headers" : ORDER,
+        "headers" : genHeader(True, ORDER),
         "body" : body,
         "link" : link,
         "isHidden" : hidden,
@@ -64,6 +75,15 @@ def index(request, hidden=False):
 def hidden(request):
     return index(request, True)
 
+
+def checkColumn(column):
+    if (column not in range(0, len(ORDER))):
+        print("User trying to change column out of range. Aborting")
+        return False
+    elif ORDER[column] in ["id"]:
+        print("User trying to change illegal columns. Aborting")
+        return False
+    return True
 
 def updateRows(request):
 
@@ -79,14 +99,9 @@ def updateRows(request):
         print("But encountered an error")
         return HttpResponseBadRequest("Missing data")
 
-    
-    if (column not in range(0, len(ORDER)-1)):
-        print("User trying to change column out of range. Aborting")
-        return HttpResponseForbidden("Column id out of range")
-    elif ORDER[column] in ["id"]:
-        print("User trying to change illegal columns. Aborting")
-        return HttpResponseForbidden("Illegal column")
 
+    if not checkColumn(column):
+        return HttpResponseForbidden("Illegal column")
 
     item = get_object_or_404(Item, id=row)
 
@@ -143,12 +158,8 @@ def updateColour(request):
         print("But encountered an error")
         return HttpResponseBadRequest("Missing data")
 
-    print(column)
-    if (column not in range(0, len(ORDER)-1)):
-        print("User trying to change column out of range. Aborting")
-        return HttpResponseForbidden("Column id out of range")
-    elif ORDER[column] in ["id"]:
-        print("User trying to change illegal columns. Aborting")
+    
+    if not checkColumn(column):
         return HttpResponseForbidden("Illegal column")
 
     item = get_object_or_404(Item, id=row)
