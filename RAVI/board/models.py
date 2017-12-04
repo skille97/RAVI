@@ -7,18 +7,18 @@ class Item(models.Model):
     id = models.AutoField(primary_key=True)
     komplet = models.BooleanField(default=False, verbose_name="Komplet")
     #Hvis dette navn ændres skal det også ændres i views.py i linje 90. Sååå kun gør det hvis det er nødvendigt
-    projekt = models.CharField(default="", max_length=20, verbose_name="Projekt")
+    projekt = models.CharField(default="", max_length=50, verbose_name="Projekt")
 
     
-    kunde = models.CharField(default="", max_length=20, verbose_name="Kunde")
-    antal = models.CharField(default="", max_length=20, verbose_name="Antal")
-    data = models.CharField(default="", max_length=20, verbose_name="Data")
-    stencil = models.CharField(default="", max_length=20, verbose_name="Stencil")
-    program = models.CharField(default="", max_length=20, verbose_name="Program")
-    montage = models.CharField(default="", max_length=20, verbose_name="Montage")
-    PCB = models.CharField(default="", max_length=20, verbose_name="PCB")
-    komponenter = models.CharField(default="", max_length=20, verbose_name="Komponeter")
-    kommentar = models.CharField(default="", max_length=20, verbose_name="Kommentar")
+    kunde = models.CharField(default="", max_length=50, verbose_name="Kunde")
+    antal = models.CharField(default="", max_length=50, verbose_name="Antal")
+    data = models.CharField(default="", max_length=50, verbose_name="Data")
+    stencil = models.CharField(default="", max_length=50, verbose_name="Stencil")
+    program = models.CharField(default="", max_length=50, verbose_name="Program")
+    montage = models.CharField(default="", max_length=50, verbose_name="Montage")
+    PCB = models.CharField(default="", max_length=50, verbose_name="PCB")
+    komponenter = models.CharField(default="", max_length=100, verbose_name="Komponeter")
+    kommentar = models.TextField(default="", verbose_name="Kommentar")
 
     
     def __str__(self):

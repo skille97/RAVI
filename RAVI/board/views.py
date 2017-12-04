@@ -177,7 +177,7 @@ def toCsv(response):
 
     #Tell the browser to be ready for our csv
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    response['Content-Disposition'] = 'attachment; filename="csv.csv"'
 
     #And write the data
     csv_writer = csv.writer(response)
