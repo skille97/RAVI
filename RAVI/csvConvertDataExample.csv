@@ -1,12 +1,13 @@
-id, id
-kunde, kunde
-projekt, projekt
-antal, antal
-data, data
-stencil, stencil
-program, program
-montage, montage
+ID, id
+Kunde, kunde
+Projekt, projekt
+Antal, antal
+Data, data
+Stencil, stencil
+Program, program
+Montage, montage
 PCB, PCB
-komponenter, komponenter
-komplet, komplet
+Components, komponenter
+Kommentarer, kommentar
+Komplet, komplet
 
