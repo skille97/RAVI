@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 import csv
 
@@ -85,6 +86,7 @@ def checkColumn(column):
         return False
     return True
 
+@csrf_exempt
 def updateRows(request):
 
     # Try parsing
@@ -113,6 +115,7 @@ def updateRows(request):
     item.save()
     return HttpResponse('')
 
+@csrf_exempt
 def hideRow(request):
     try:
         data = json.loads(((request.body).decode('utf-8')))
@@ -128,6 +131,7 @@ def hideRow(request):
     item.save()
     return HttpResponse('')
 
+@csrf_exempt
 def addRow(request): 
     try:
         data = json.loads(((request.body).decode('utf-8')))
@@ -145,7 +149,7 @@ def addRow(request):
 
     return HttpResponse('')
 
-
+@csrf_exempt
 def updateColour(request):
     try:
         data = json.loads(((request.body).decode('utf-8')))
@@ -169,7 +173,7 @@ def updateColour(request):
 
     return HttpResponse('')
 
-
+@csrf_exempt
 def toCsv(response):
     items = Item.objects.all().order_by("id")
 

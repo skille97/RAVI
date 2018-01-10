@@ -25,7 +25,7 @@ SECRET_KEY = 'qq&=y1aa!mraloxijxyk)f44f6mg_*o=168nhy^!1b%&klxesk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 Temp_Path = os.path.realpath('.')
 
