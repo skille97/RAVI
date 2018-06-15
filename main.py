@@ -51,36 +51,36 @@ order = [0] + [11, 2, 12, 3, 4, 5, 6, 7, 10, 9, 8] #Komplet vil altid være sids
 databaseHeaderWithIPNV = ["id", "position", "name"] + databaseHeader + ["visible"]
 databaseHeaderOrder = []
 for i in order:
-	databaseHeaderOrder.append(databaseHeaderWithIPNV[i])
+    databaseHeaderOrder.append(databaseHeaderWithIPNV[i])
 
 
 def getDisplayOrder(row):
-	#Order the different data should be displayed where number represents number in databaseHeader. Should corrospond to displayHeaders
-	returnList = []
-	for i in order:
-		returnList.append(row[i])
-	return returnList
+    #Order the different data should be displayed where number represents number in databaseHeader. Should corrospond to displayHeaders
+    returnList = []
+    for i in order:
+            returnList.append(row[i])
+    return returnList
 
 
 def insertDBheader(DBheaders):
-	text = ""
-	for header in DBheaders:
-		text = text + header + " TEXT, "
-	return text
+    text = ""
+    for header in DBheaders:
+            text = text + header + " TEXT, "
+    return text
 
 def makeExecuteSpaces(amount, string):
-	text = ""
-	for i in range(0, amount):
-		text = text + ", " + string
-	return text
-
+    text = ""
+    for i in range(0, amount):
+            text = text + ", " + string
+    return text
+    
 #TODO: Database versioning
 def dbInit():
-	db = sqlite3.connect(db_name)
-	db.execute("CREATE TABLE IF NOT EXISTS tasks ( id INTEGER PRIMARY KEY NOT NULL, position INTEGER NOT NULL, name TEXT, " + insertDBheader(databaseHeader) + " visible INTEGER)")
-	db.execute("CREATE TABLE IF NOT EXISTS colours ( id INTEGER PRIMARY KEY NOT NULL, position INTEGER NOT NULL, name TEXT, " + insertDBheader(databaseHeader) + " visible INTEGER)")
+    db = sqlite3.connect(db_name)
+    db.execute("CREATE TABLE IF NOT EXISTS tasks ( id INTEGER PRIMARY KEY NOT NULL, position INTEGER NOT NULL, name TEXT, " + insertDBheader(databaseHeader) + " visible INTEGER)")
+    db.execute("CREATE TABLE IF NOT EXISTS colours ( id INTEGER PRIMARY KEY NOT NULL, position INTEGER NOT NULL, name TEXT, " + insertDBheader(databaseHeader) + " visible INTEGER)")
 
-	db.close()
+    db.close()
 
 #Add entry with the name, comments, components and PCB as values
 def addEntry(name):
@@ -104,13 +104,13 @@ def updateCell(row, column, newValue):
 
 @app.route('/updateRow/', methods=['POST'])
 def updateRow():
-	row = request.json['id']
-	column = request.json['column']
-	newValue = request.json['newValue']
-	column = databaseHeaderOrder[int(column)]
-	updateCell(row, column, newValue)
-	# retrnes a sringe ingore
-	return "lol"
+    row = request.json['id']
+    column = request.json['column']
+    newValue = request.json['newValue']
+    column = databaseHeaderOrder[int(column)]
+    updateCell(row, column, newValue)
+    # retrnes a sringe ingore
+    return "lol"
 
 @app.route('/hideRow/', methods=['POST'])
 def hideRow():
@@ -142,17 +142,17 @@ def getColours():
     return colours
 
 def getHiddenTasks():
-	db = sqlite3.connect(db_name)
-	cursor = db.cursor()
-	body = []
-	hiddenStates = []
-	for row in cursor.execute("SELECT * FROM tasks ORDER BY position"):
-		try:
-			body.append(getDisplayOrder(row))
-			hiddenStates.append(row[len(databaseHeaderWithIPNV)-1])
-		except:
-			print("error in getting hidden tasks")
-	return [body, hiddenStates]
+    db = sqlite3.connect(db_name)
+    cursor = db.cursor()
+    body = []
+    hiddenStates = []
+    for row in cursor.execute("SELECT * FROM tasks ORDER BY position"):
+        try:
+            body.append(getDisplayOrder(row))
+            hiddenStates.append(row[len(databaseHeaderWithIPNV)-1])
+        except:
+            print("error in getting hidden tasks")
+    return [body, hiddenStates]
 
 
 def getHiddenColours():
@@ -169,8 +169,8 @@ def main():
 
 @app.route("/hidden/")
 def hidden():
-	tasks = getHiddenTasks()
-	return render_template('index.html', headers=displayHeaders, body=tasks[0], colours=getHiddenColours(), hiddenStates=tasks[1],  link="/", isHidden=True)
+    tasks = getHiddenTasks()
+    return render_template('index.html', headers=displayHeaders, body=tasks[0], colours=getHiddenColours(), hiddenStates=tasks[1],  link="/", isHidden=True)
 
 @app.route('/addRow/', methods=['POST'])
 def addRow():
@@ -191,19 +191,19 @@ def updateColour():
 
 @app.route('/csv')
 def toCsv():
-	db = sqlite3.connect(db_name)
-	c = db.cursor()
-	body = []
-	for row in c.execute("SELECT * FROM tasks ORDER BY position"):
-		try:
-			body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[13]])
-		except:
-			print("error in converting to csv")
-	with open("upload/out.csv", "w", newline='') as csv_file:              # Python 2 version
-		csv_writer = csv.writer(csv_file)
-		csv_writer.writerow(displayHeaders) # write headers
-		csv_writer.writerows(body)
-	return send_file("upload/out.csv", as_attachment=True)
+    db = sqlite3.connect(db_name)
+    c = db.cursor()
+    body = []
+    for row in c.execute("SELECT * FROM tasks ORDER BY position"):
+            try:
+                    body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[13]])
+            except:
+                    print("error in converting to csv")
+    with open("upload/out.csv", "w", newline='') as csv_file:              # Python 2 version
+            csv_writer = csv.writer(csv_file)
+            csv_writer.writerow(displayHeaders) # write headers
+            csv_writer.writerows(body)
+    return send_file("upload/out.csv", as_attachment=True)
 
 @app.route('/bom/', methods=['GET', 'POST'])
 def upload_file():
