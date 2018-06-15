@@ -29,13 +29,14 @@ if not os.path.isdir(UPLOAD_FOLDER):
 app = Flask(__name__, root_path=os.getcwd())
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# TODO: Dette skal sættes i arguments eller config fil
 db_name = "RAVI.db"
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
-#Header configuration start
+#Header configuration start TODO: Dette skal alt sammen fremgå fra databasen
 #Database headers without primary headers; id, position, name and visible. Order is not important.
 #                    3        4          5          6           7           8            9         10       11         12
 databaseHeader = ["data", "stencil", "program", "montage", "delivery", "comments", "components", "PCB", "customer", "count"] #Changing this requires a new database
@@ -65,7 +66,7 @@ def getDisplayOrder(row):
 def insertDBheader(DBheaders):
     text = ""
     for header in DBheaders:
-            text = text + header + " TEXT, "
+        text = text + header + " TEXT, "
     return text
 
 def makeExecuteSpaces(amount, string):
@@ -82,17 +83,17 @@ def dbInit():
 
     db.close()
 
-#Add entry with the name, comments, components and PCB as values
+#Add entry with the name, comments, components and PCB as values. TODO: Remake this funktion, 
 def addEntry(name):
     db = sqlite3.connect(db_name)
     c = db.cursor()
-    #Hold on to your butts, this is a long one.
+    #Hold on to your butts, this is a long one. TODO: Move these to seperate funktions
     c.execute("INSERT INTO tasks (position, name, " + ', '.join(databaseHeader) + ", visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM tasks), ?" + makeExecuteSpaces(len(databaseHeader), "''") + ", 1)", [name])
     c.execute("INSERT INTO colours (position, name, " + ', '.join(databaseHeader) + ", visible) VALUES((SELECT IFNULL(MAX(position), 0) + 1 FROM colours)" + makeExecuteSpaces(len(databaseHeader) + 1, "' '") + ", 1)")
     db.commit()
     db.close()
 
-#Update the cell with the ID row. Then the column "column" is set to newValue.
+#Update the cell with the ID row. Then the column "column" is set to newValue. TODO: Remake
 def updateCell(row, column, newValue):
     db = sqlite3.connect(db_name)
     c = db.cursor()
@@ -107,6 +108,7 @@ def updateRow():
     row = request.json['id']
     column = request.json['column']
     newValue = request.json['newValue']
+    # TODO: Ordering should come from database
     column = databaseHeaderOrder[int(column)]
     updateCell(row, column, newValue)
     # retrnes a sringe ingore
@@ -124,6 +126,7 @@ def hideRow():
     db.close()
     return "Row number" + str(row) + " hidden"
 
+# TODO: Fix this function
 def getTasks():
     db = sqlite3.connect(db_name)
     cursor = db.cursor()
@@ -133,6 +136,7 @@ def getTasks():
 
     return body
 
+# TODO: Fix this function
 def getColours():
     db = sqlite3.connect(db_name)
     cursor = db.cursor()
@@ -141,6 +145,7 @@ def getColours():
         colours.append(getDisplayOrder(row))
     return colours
 
+# TODO. Fix this function
 def getHiddenTasks():
     db = sqlite3.connect(db_name)
     cursor = db.cursor()
@@ -155,6 +160,7 @@ def getHiddenTasks():
     return [body, hiddenStates]
 
 
+# TODO: Fix this function
 def getHiddenColours():
     db = sqlite3.connect(db_name)
     cursor = db.cursor()
@@ -163,6 +169,7 @@ def getHiddenColours():
         colours.append(getDisplayOrder(row))
     return colours
 
+# TODO: Add some newlines
 @app.route("/")
 def main():
     return render_template('index.html', headers=displayHeaders, body=getTasks(), colours=getColours(), hiddenStates=[], link="/hidden/", isHidden=False)
@@ -178,6 +185,7 @@ def addRow():
     addEntry(text)
     return "true"
 
+# Dublication of other function
 @app.route('/updateColour/', methods=['POST'])
 def updateColour():
     column = databaseHeaderOrder[int(request.json['column'])]
@@ -195,14 +203,15 @@ def toCsv():
     c = db.cursor()
     body = []
     for row in c.execute("SELECT * FROM tasks ORDER BY position"):
-            try:
-                    body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[13]])
-            except:
-                    print("error in converting to csv")
+        try:
+            # WHAT IS THIS
+            body.append([row[0], row[11], row[2], row[12], row[3], row[4], row[5], row[6], row[7], row[10], row[9], row[8], row[13]])
+        except:
+            print("error in converting to csv")
     with open("upload/out.csv", "w", newline='') as csv_file:              # Python 2 version
-            csv_writer = csv.writer(csv_file)
-            csv_writer.writerow(displayHeaders) # write headers
-            csv_writer.writerows(body)
+        csv_writer = csv.writer(csv_file)
+        csv_writer.writerow(displayHeaders) # write headers
+        csv_writer.writerows(body)
     return send_file("upload/out.csv", as_attachment=True)
 
 @app.route('/bom/', methods=['GET', 'POST'])
